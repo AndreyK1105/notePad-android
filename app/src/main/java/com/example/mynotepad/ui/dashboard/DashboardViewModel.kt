@@ -22,7 +22,7 @@ class DashboardViewModel(private val repository: NoteRepository,private val addN
 
     }
     var text: LiveData<String> = _text
-//    val notes: LiveData<List<Note>> =getNotesUseCase.execute().asLiveData()
+    val notes: LiveData<List<Note>> =getNotesUseCase.notesFlow .asLiveData()
 //    val notesFlow: Flow<List<Note>> =getNotesUseCase.execute()
 
 
@@ -46,8 +46,8 @@ viewModelScope.launch {
 
    init {
 
-       viewModelScope.launch{ _text = getNotesUseCase.execute().asLiveData() }
-       val notes: LiveData<List<Note>> =getNotesUseCase.execute().asLiveData()
+//       viewModelScope.launch{ _text = getNotesUseCase.execute().asLiveData() }
+//       val notes: LiveData<List<Note>> =getNotesUseCase.execute().asLiveData()
         _text.postValue("text")
     }
 

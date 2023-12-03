@@ -11,8 +11,23 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class NoteRepositoryImpl (private val noteStorage: NoteStorage,
-                          override val notesFlow: Flow<List<Note>>
+
 ): NoteRepository{
+
+    override val notesFlow: Flow<List<Note>> =
+
+        noteStorage.allNotes.flatMapLatest { value ->
+
+
+            flow{
+                val notes = arrayListOf<Note>()
+                for (note in value) {
+                    notes.add(Note(note.id, note.textNote))
+                    emit(notes.toList())
+                }
+            }
+        }
+
 
     override suspend fun getNotes(): Flow<List<Note>> {
 
@@ -22,7 +37,7 @@ class NoteRepositoryImpl (private val noteStorage: NoteStorage,
                val notes = arrayListOf<Note>()
                for (note in value) {
                    notes.add(Note(note.id, note.textNote))
-               emit(notes.toList())
+                   emit(notes.toList())
                }
            }
 

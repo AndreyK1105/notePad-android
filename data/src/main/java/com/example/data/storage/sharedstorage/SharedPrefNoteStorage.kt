@@ -6,7 +6,7 @@ import com.example.domain.models.Note
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class SharedPrefNoteStorage():NoteStorage {
+class SharedPrefNoteStorage(override val allNotes: Flow<List<NoteRepositoryEntity>>):NoteStorage {
     override suspend fun getNotes(): Flow<List<NoteRepositoryEntity>> {
         val listFlow= flow<List<NoteRepositoryEntity>> {
            emit (listOf<NoteRepositoryEntity>( NoteRepositoryEntity(id = 1, textNote = "wwwee"))) }

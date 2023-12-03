@@ -2,6 +2,7 @@ package com.example.mynotepad.app
 
 import android.app.Application
 import com.example.mynotepad.di.dashboardModule
+import com.example.mynotepad.di.dataBaseModule
 import com.example.mynotepad.di.dataModule
 import com.example.mynotepad.di.domainModule
 import com.example.mynotepad.di.homeModule
@@ -17,7 +18,13 @@ class App:Application() {
         startKoin{
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-modules(listOf(dashboardModule, dataModule, domainModule, homeModule ))
+modules(listOf(
+    dataBaseModule,
+    dashboardModule,
+    dataModule,
+    domainModule,
+    homeModule
+))
         }
     }
 }

@@ -42,6 +42,8 @@ private val viewModel by viewModel<DashboardViewModel>()
 //        val dashboardViewModel =
 //            ViewModelProvider(this).get(DashboardViewModel::class.java)
 
+
+
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -54,14 +56,20 @@ findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
 
 
            //viewModel.setText("newText")
-
-           // viewModel.setText("newText!!!")
-
         }
         val textView: TextView = binding.textDashboard
         viewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+        val textLenghtList=binding.textLenghtList
+        //textLenghtList.text=
+        viewModel.notes.observe( viewLifecycleOwner){
+                notes->
+textLenghtList.text=notes.size.toString()
+
+        }
+
         return root
     }
 

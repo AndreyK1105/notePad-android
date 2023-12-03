@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.mynotepad.app.App
 import com.example.mynotepad.databinding.ActivityMainBinding
 import com.example.mynotepad.ui.dashboard.DashboardViewModel
 import com.example.mynotepad.ui.home.HomeViewModel

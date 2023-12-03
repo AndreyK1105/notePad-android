@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 
 class GetNotesUseCase( private val noteRepositoryLocal:NoteRepository) {
-    //val notesFlow=
+    val notesFlow=noteRepositoryLocal.notesFlow
     suspend fun execute():Flow<List<Note>> {
-       val notes = noteRepositoryLocal.getNotes().flatMapLatest { value->flow{emit(value)  } }
+        val notes=noteRepositoryLocal.notesFlow
+       //val notes = noteRepositoryLocal.getNotes().flatMapLatest { value->flow{emit(value)  } }
       return notes
         //listOf(Note(1,""))
     }
