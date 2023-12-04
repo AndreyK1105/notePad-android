@@ -50,12 +50,12 @@ private val viewModel by viewModel<DashboardViewModel>()
         val buttonDashboard: Button = binding.buttonDashboard
        // buttonDashboard.setText("text")
         buttonDashboard.setOnClickListener{
-            Log.v("a","ClickListener" )
-            homeViewModel. setModel(myModel)
-findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
+//            Log.v("a","ClickListener" )
+//            homeViewModel. setModel(myModel)
+//findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
 
 
-           //viewModel.setText("newText")
+           viewModel.addNote("newText")
         }
         val textView: TextView = binding.textDashboard
         viewModel.text.observe(viewLifecycleOwner) {
@@ -66,6 +66,7 @@ findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
         //textLenghtList.text=
         viewModel.notes.observe( viewLifecycleOwner){
                 notes->
+            Log.v("a","Observe viewModel ${notes.size}" )
 textLenghtList.text=notes.size.toString()
 
         }

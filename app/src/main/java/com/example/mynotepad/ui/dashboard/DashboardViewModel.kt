@@ -10,10 +10,7 @@ import com.example.domain.models.Note
 import com.example.domain.repositoriy.NoteRepository
 import com.example.domain.usecase.AddNoteUseCase
 import com.example.domain.usecase.GetNotesUseCase
-import com.example.mynotepad.di.domainModule
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.koin.dsl.module
 
 class DashboardViewModel(private val repository: NoteRepository,private val addNoteUseCase: AddNoteUseCase, private val getNotesUseCase: GetNotesUseCase) : ViewModel( ) {
     //private val addNoteUseCase = domainModule
@@ -29,10 +26,10 @@ class DashboardViewModel(private val repository: NoteRepository,private val addN
     // private val _notes=MutableLiveData<List<Note>>().apply { value=[] }
     // val notes: LiveData<List<Note>>=_notes
 
-   suspend fun setText(newText: String) {
+    fun addNote(newText: String) {
 
 viewModelScope.launch {
-    addNoteUseCase.execute(Note(2,"q"))
+    addNoteUseCase.execute(Note(0,newText))
 }
 
 

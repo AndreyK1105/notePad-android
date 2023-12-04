@@ -9,4 +9,6 @@ interface NoteStorage {
     suspend fun getNotes(): Flow<List<NoteRepositoryEntity>>
     suspend fun  getNote(id: Int):NoteRepositoryEntity
     suspend fun addNote(note: Note):Boolean
+
+    suspend fun delNote(id: Int):Boolean
 }

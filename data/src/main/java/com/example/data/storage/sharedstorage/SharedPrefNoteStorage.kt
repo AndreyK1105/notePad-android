@@ -20,4 +20,8 @@ class SharedPrefNoteStorage(override val allNotes: Flow<List<NoteRepositoryEntit
     override suspend fun addNote(note: Note): Boolean {
         return true
     }
+
+    override suspend fun delNote(id: Int): Boolean {
+        TODO("Not yet implemented")
+    }
 }
