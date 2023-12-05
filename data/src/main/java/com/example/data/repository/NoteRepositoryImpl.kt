@@ -58,7 +58,7 @@ class NoteRepositoryImpl (private val noteStorage: NoteStorage,
     }
 
     override suspend fun delNote(id: Int): Boolean {
-        TODO("Not yet implemented")
+        return noteStorage.delNote(id)
     }
 
 }

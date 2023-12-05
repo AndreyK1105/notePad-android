@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val dashboardModule= module {
     viewModel<DashboardViewModel>{
-        DashboardViewModel(addNoteUseCase = get(), getNotesUseCase = get(), repository = get() )
+        DashboardViewModel(addNoteUseCase = get(), getNotesUseCase = get(),delNoteUseCase=get() )
     }
 }
 

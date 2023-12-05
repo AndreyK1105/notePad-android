@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.models.Note
 import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentDashboardBinding
 import com.example.mynotepad.ui.home.HomeViewModel
@@ -47,32 +49,46 @@ private val viewModel by viewModel<DashboardViewModel>()
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val buttonDashboard: Button = binding.buttonDashboard
+        val buttonDashboard: Button = binding.button
        // buttonDashboard.setText("text")
         buttonDashboard.setOnClickListener{
 //            Log.v("a","ClickListener" )
 //            homeViewModel. setModel(myModel)
 //findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
-
-
-           viewModel.addNote("newText")
+//
+//
+          viewModel.addNote("newText")
+//          //  viewModel.delNote(1)
         }
-        val textView: TextView = binding.textDashboard
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        var notes: List<Note> = listOf(Note(1,"qqq"))
+        val notesAdapter=AdapterNotes(notes)
+        val recyclerViewNotes:RecyclerView=binding.recyclerViewNotes
 
-        val textLenghtList=binding.textLenghtList
-        //textLenghtList.text=
-        viewModel.notes.observe( viewLifecycleOwner){
-                notes->
-            Log.v("a","Observe viewModel ${notes.size}" )
-textLenghtList.text=notes.size.toString()
+        recyclerViewNotes.adapter=notesAdapter
+        viewModel.notes.observe(viewLifecycleOwner){
+            value->notes=value
+           Log.v("a","List Notes size ${notes.size}" )
+            recyclerViewNotes.adapter=AdapterNotes(value)
 
         }
+
+
+
+
+
+
+//        val textLenghtList=binding.textLenghtList
+//        //textLenghtList.text=
+//        viewModel.notes.observe( viewLifecycleOwner){
+//                notes->
+//            Log.v("a","Observe viewModel ${notes.size}" )
+//textLenghtList.text=notes.size.toString()
+//
+//        }
 
         return root
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

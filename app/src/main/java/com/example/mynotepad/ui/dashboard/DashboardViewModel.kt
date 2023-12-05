@@ -9,10 +9,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.models.Note
 import com.example.domain.repositoriy.NoteRepository
 import com.example.domain.usecase.AddNoteUseCase
+import com.example.domain.usecase.DelNoteUseCase
 import com.example.domain.usecase.GetNotesUseCase
 import kotlinx.coroutines.launch
 
-class DashboardViewModel(private val repository: NoteRepository,private val addNoteUseCase: AddNoteUseCase, private val getNotesUseCase: GetNotesUseCase) : ViewModel( ) {
+class DashboardViewModel(private val delNoteUseCase: DelNoteUseCase ,private val addNoteUseCase: AddNoteUseCase, private val getNotesUseCase: GetNotesUseCase) : ViewModel( ) {
     //private val addNoteUseCase = domainModule
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
@@ -36,9 +37,16 @@ viewModelScope.launch {
 
 
 
+
         _text.postValue(newText)
         Log.v("a", "set Text")
         Log.v("a", text.value.toString())
+    }
+      fun delNote(id:Int){
+        viewModelScope.launch {
+            delNoteUseCase.execute(id)
+        }
+
     }
 
    init {
