@@ -22,13 +22,13 @@ class AdapterNotes(private val notes: List<Note>): RecyclerView.Adapter < Adapte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        Log.v("a","adapter bnind ${ notes[0].textNote}" )
+        Log.v("a","adapter create ${ notes[0].textNote}" )
        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_note,parent,false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.v("a","adapter bnind ${ notes[0].textNote}" )
+       // Log.v("a","adapter bnind ${ notes[0].textNote}" )
        holder.textView.text=notes[position].textNote
     }
 

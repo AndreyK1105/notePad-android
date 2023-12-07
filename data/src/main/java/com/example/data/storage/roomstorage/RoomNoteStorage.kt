@@ -23,9 +23,8 @@ class RoomNoteStorage(
                 val notes = arrayListOf<NoteRepositoryEntity>()
                 for (note in value) {
                     notes.add(NoteRepositoryEntity(note.id, note.note))
-                    emit(notes.toList())
                 }
-
+                emit(notes.toList())
             }
         }
 

@@ -49,28 +49,49 @@ private val viewModel by viewModel<DashboardViewModel>()
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val buttonDashboard: Button = binding.button
-       // buttonDashboard.setText("text")
-        buttonDashboard.setOnClickListener{
-//            Log.v("a","ClickListener" )
-//            homeViewModel. setModel(myModel)
-//findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
-//
-//
-          viewModel.addNote("newText")
-//          //  viewModel.delNote(1)
-        }
+        var idLast:Int=0
         var notes: List<Note> = listOf(Note(1,"qqq"))
         val notesAdapter=AdapterNotes(notes)
         val recyclerViewNotes:RecyclerView=binding.recyclerViewNotes
 
         recyclerViewNotes.adapter=notesAdapter
         viewModel.notes.observe(viewLifecycleOwner){
-            value->notes=value
-           Log.v("a","List Notes size ${notes.size}" )
+                value->notes=value
+            Log.v("a","List Notes size ${notes.size}" )
             recyclerViewNotes.adapter=AdapterNotes(value)
 
+            idLast=notes[notes.lastIndex].id
         }
+
+
+        val floatingButton=binding.floatingAddNote
+        floatingButton.setOnClickListener{
+            findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
+        }
+//        val buttonDashboard: Button = binding.button
+//       // buttonDashboard.setText("text")
+//        buttonDashboard.setOnClickListener{
+////            Log.v("a","ClickListener" )
+////            homeViewModel. setModel(myModel)
+////
+////
+//          viewModel.addNote("newText")
+////          //  viewModel.delNote(1)
+//        }
+//
+//        val buttonDel: Button = binding.button2
+//        buttonDel.text = "delLast"
+//        buttonDel.setOnClickListener{
+////            Log.v("a","ClickListener" )
+////            homeViewModel. setModel(myModel)
+////findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
+////
+//            //viewModel.addNote("newText")
+//
+//            viewModel.delNote(idLast)
+//        }
+
+
 
 
 

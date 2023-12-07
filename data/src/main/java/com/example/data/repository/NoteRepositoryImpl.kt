@@ -23,8 +23,9 @@ class NoteRepositoryImpl (private val noteStorage: NoteStorage,
                 val notes = arrayListOf<Note>()
                 for (note in value) {
                     notes.add(Note(note.id, note.textNote))
-                    emit(notes.toList())
+
                 }
+                emit(notes.toList())
             }
         }
 
@@ -37,8 +38,9 @@ class NoteRepositoryImpl (private val noteStorage: NoteStorage,
                val notes = arrayListOf<Note>()
                for (note in value) {
                    notes.add(Note(note.id, note.textNote))
-                   emit(notes.toList())
+
                }
+               emit(notes.toList())
            }
 
           }

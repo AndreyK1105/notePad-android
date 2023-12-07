@@ -1,13 +1,19 @@
 package com.example.mynotepad.ui.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentMyBinding
+import com.example.mynotepad.ui.dashboard.DashboardViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,11 +30,14 @@ class MyFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private  var _binding: FragmentMyBinding?=null
+    private  var _binding: FragmentMyBinding ?=null
 
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
+
+    private val viewModel by viewModel<DashboardViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +54,25 @@ class MyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding=FragmentMyBinding.inflate(inflater,container, false)
+
+        val editText:EditText
+        editText=binding.textInputEditText
+
+        editText.addTextChangedListener(object :TextWatcher{
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                Log.v("a","My fragment onTextChanged  ${p0}  p1=${p1}  p2=${p2} p3=${p3}  ")
+            }
+        })
+
+
+
         //val view = binding.root
         // Inflate the layout for this fragment
     return binding.root
