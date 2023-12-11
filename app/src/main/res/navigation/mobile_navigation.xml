@@ -13,9 +13,7 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_dashboard2"
             app:destination="@id/navigation_dashboard" />
-        <action
-            android:id="@+id/action_navigation_home_to_myFragment"
-            app:destination="@id/myFragment" />
+
     </fragment>
 
     <fragment

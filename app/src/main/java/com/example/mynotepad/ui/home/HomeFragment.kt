@@ -51,7 +51,7 @@ private val homeViewModel by viewModel<HomeViewModel>()
 
         val floatingButton: FloatingActionButton=binding.floatingActionButton
         floatingButton.setOnClickListener(){
-            findNavController().navigate(R.id.action_navigation_home_to_myFragment ,null)
+        //    findNavController().navigate(R.id.action_navigation_home_to_myFragment ,null)
         }
 
         val dataset = arrayOf("January", "February", "March", "February", "March" ,"February", "March", "February", "March")
@@ -66,7 +66,7 @@ private val homeViewModel by viewModel<HomeViewModel>()
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.v("HomFr", "onDestroyView")
+        //Log.v("HomFr", "onDestroyView")
         _binding = null
     }
 }

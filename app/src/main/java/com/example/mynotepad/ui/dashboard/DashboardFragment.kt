@@ -57,7 +57,7 @@ private val viewModel by viewModel<DashboardViewModel>()
         recyclerViewNotes.adapter=notesAdapter
         viewModel.notes.observe(viewLifecycleOwner){
                 value->notes=value
-            Log.v("a","List Notes size ${notes.size}" )
+            //Log.v("a","List Notes size ${notes.size}" )
             recyclerViewNotes.adapter=AdapterNotes(value)
 
             idLast=notes[notes.lastIndex].id

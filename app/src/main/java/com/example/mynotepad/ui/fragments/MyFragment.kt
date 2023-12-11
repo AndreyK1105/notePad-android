@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.activity.addCallback
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentMyBinding
@@ -41,12 +44,17 @@ class MyFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       // setHasOptionsMenu(true)
+
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
+    Log.v("a","my fr callBack button back ")
+    findNavController().popBackStack()
+}
+
     }
 
     override fun onCreateView(
@@ -54,6 +62,38 @@ class MyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding=FragmentMyBinding.inflate(inflater,container, false)
+
+
+        val toolbar=binding.toolbar
+        toolbar.setTitle("my frag")
+        toolbar.inflateMenu(R.menu.toolbar_menu)
+toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
+        toolbar.setNavigationOnClickListener{
+
+            findNavController().popBackStack()
+            Log.v("a","click listener action home ")
+
+        }
+        toolbar.setOnMenuItemClickListener{
+            when(it.itemId){
+                R.id.action_save->{
+                    Log.v("a","click listener action save ")
+                    true
+                }
+                R.id.action_search->{
+                    Log.v("a","click listener action search ")
+                    true
+                }
+                R.id.action_user->{
+                    Log.v("a","click listener action user ")
+                    true
+                }
+
+                else ->false
+            }
+        }
+
+
 
         val editText:EditText
         editText=binding.textInputEditText
@@ -77,6 +117,16 @@ class MyFragment : Fragment() {
         // Inflate the layout for this fragment
     return binding.root
     //return inflater.inflate(R.layout.fragment_my, container, false)
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.v("a","My fragment onDestroy  ")
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+
     }
 
     companion object {
