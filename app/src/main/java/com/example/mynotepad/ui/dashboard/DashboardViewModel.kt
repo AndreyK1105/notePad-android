@@ -13,7 +13,10 @@ import com.example.domain.usecase.DelNoteUseCase
 import com.example.domain.usecase.GetNotesUseCase
 import kotlinx.coroutines.launch
 
-class DashboardViewModel(private val delNoteUseCase: DelNoteUseCase ,private val addNoteUseCase: AddNoteUseCase, private val getNotesUseCase: GetNotesUseCase) : ViewModel( ) {
+class DashboardViewModel(
+    private val delNoteUseCase: DelNoteUseCase ,
+    private val addNoteUseCase: AddNoteUseCase,
+    private val getNotesUseCase: GetNotesUseCase) : ViewModel( ) {
     //private val addNoteUseCase = domainModule
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
@@ -54,6 +57,12 @@ viewModelScope.launch {
 //       viewModelScope.launch{ _text = getNotesUseCase.execute().asLiveData() }
 //       val notes: LiveData<List<Note>> =getNotesUseCase.execute().asLiveData()
         _text.postValue("text")
+       Log.v("a", "ViewModelDashboard init")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.v("a", "ViewModelDashboard onClear")
     }
 
 }

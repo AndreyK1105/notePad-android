@@ -17,12 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.Note
 import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentDashboardBinding
+import com.example.mynotepad.ui.editnote.EditNoteArgs
 import com.example.mynotepad.ui.home.HomeViewModel
 import com.example.mynotepad.ui.home.MyModel
 import com.example.mynotepad.ui.notifications.NotificationsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(), AdapterNotes.RecyclerItemListener {
 private val myModel=MyModel(wname = "model1" , age = 12 )
 //  private  val homeViewModel=
 //        ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -32,6 +33,8 @@ private val viewModel by viewModel<DashboardViewModel>()
     private val homeViewModel by viewModel<HomeViewModel>()
     // This property is only valid between onCreateView and
     // onDestroyView.
+
+    var notes: List<Note> = listOf(Note(1,"qqq"))
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -44,29 +47,34 @@ private val viewModel by viewModel<DashboardViewModel>()
 //        val dashboardViewModel =
 //            ViewModelProvider(this).get(DashboardViewModel::class.java)
 
-
+val arg= EditNoteArgs(-1)
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         var idLast:Int=0
-        var notes: List<Note> = listOf(Note(1,"qqq"))
-        val notesAdapter=AdapterNotes(notes)
+
+        val notesAdapter=AdapterNotes(notes,this)
         val recyclerViewNotes:RecyclerView=binding.recyclerViewNotes
 
         recyclerViewNotes.adapter=notesAdapter
         viewModel.notes.observe(viewLifecycleOwner){
                 value->notes=value
             //Log.v("a","List Notes size ${notes.size}" )
-            recyclerViewNotes.adapter=AdapterNotes(value)
+            recyclerViewNotes.adapter=AdapterNotes(value, this)
 
             idLast=notes[notes.lastIndex].id
         }
+       // recyclerViewNotes.adapter.
+
+        val bundle=Bundle()
 
 
         val floatingButton=binding.floatingAddNote
         floatingButton.setOnClickListener{
-            findNavController().navigate(R.id.action_navigation_dashboard_to_myFragment )
+           // val action=
+           // bundle.putInt("idNote", -1)
+            findNavController().navigate(DashboardFragmentDirections.actionNavigationDashboardToMyFragment())
         }
 //        val buttonDashboard: Button = binding.button
 //       // buttonDashboard.setText("text")
@@ -114,5 +122,11 @@ private val viewModel by viewModel<DashboardViewModel>()
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(position: Int) {
+val idNote=notes[position].id
+        Log.v("a","Click item position=${position}" )
+        findNavController().navigate(DashboardFragmentDirections.actionNavigationDashboardToMyFragment(idNote))
     }
 }

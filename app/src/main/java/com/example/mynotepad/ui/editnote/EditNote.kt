@@ -1,40 +1,39 @@
-package com.example.mynotepad.ui.fragments
+package com.example.mynotepad.ui.editnote
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.activity.addCallback
-import androidx.navigation.NavController
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentMyBinding
 import com.example.mynotepad.ui.dashboard.DashboardViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [MyFragment.newInstance] factory method to
+ * Use the [EditNote.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MyFragment : Fragment() {
+class EditNote : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var idNote: Int? = 0
     private var param2: String? = null
 
-    private  var _binding: FragmentMyBinding ?=null
-
+    private  var _binding: FragmentMyBinding?=null
+    private val navArgs : EditNoteArgs by navArgs()
+    var idNoteArg:Int =0
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
@@ -47,11 +46,12 @@ class MyFragment : Fragment() {
 
 
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
+            idNote = it.getInt(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
 val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
-    Log.v("a","my fr callBack button back ")
+    Log.v("a", "my fr callBack button back ")
     findNavController().popBackStack()
 }
 
@@ -61,9 +61,11 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding=FragmentMyBinding.inflate(inflater,container, false)
 
+        idNoteArg=navArgs.idNote
+        _binding= FragmentMyBinding.inflate(inflater, container, false)
 
+        Log.v("a", "EditNote idNoteArg=$idNoteArg ")
         val toolbar=binding.toolbar
         toolbar.setTitle("my frag")
         toolbar.inflateMenu(R.menu.toolbar_menu)
@@ -71,21 +73,21 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
         toolbar.setNavigationOnClickListener{
 
             findNavController().popBackStack()
-            Log.v("a","click listener action home ")
+            Log.v("a", "click listener action home ")
 
         }
         toolbar.setOnMenuItemClickListener{
             when(it.itemId){
-                R.id.action_save->{
-                    Log.v("a","click listener action save ")
+                R.id.action_save ->{
+                    Log.v("a", "click listener action save ")
                     true
                 }
-                R.id.action_search->{
-                    Log.v("a","click listener action search ")
+                R.id.action_search ->{
+                    Log.v("a", "click listener action search ")
                     true
                 }
-                R.id.action_user->{
-                    Log.v("a","click listener action user ")
+                R.id.action_user ->{
+                    Log.v("a", "click listener action user ")
                     true
                 }
 
@@ -95,10 +97,10 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
 
 
 
-        val editText:EditText
+        val editText: EditText
         editText=binding.textInputEditText
 
-        editText.addTextChangedListener(object :TextWatcher{
+        editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
 
             }
@@ -107,7 +109,7 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
 
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.v("a","My fragment onTextChanged  ${p0}  p1=${p1}  p2=${p2} p3=${p3}  ")
+                Log.v("a", "My fragment onTextChanged  ${p0}  p1=${p1}  p2=${p2} p3=${p3}  ")
             }
         })
 
@@ -122,7 +124,7 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.v("a","My fragment onDestroy  ")
+        Log.v("a", "My fragment onDestroy  ")
     }
     override fun onDestroyView() {
         super.onDestroyView()
@@ -140,10 +142,10 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyFragment().apply {
+        fun newInstance(param1: Int, param2: String) =
+            EditNote().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
+                    putInt(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
             }
