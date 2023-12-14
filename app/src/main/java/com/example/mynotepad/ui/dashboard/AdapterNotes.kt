@@ -26,6 +26,7 @@ class AdapterNotes(private val notes: List<Note>,
         init {
 view.setOnClickListener(this)
             textView=view.findViewById(R.id.itemNote)
+     //textView.textSize= 20.0F
         }
 
         override fun onClick(p0: View?) {
@@ -46,7 +47,7 @@ view.setOnClickListener(this)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
        // Log.v("a","adapter bnind ${ notes[0].textNote}" )
         val item=notes[position]
-       holder.textView.text=item.textNote
+       holder.textView.text="${item.textNote.trimEnd() }"
 //        holder.itemView.setOnClickListener{
 //           if (onClickListener!=null){
 //               onClickListener!!.onClick(position, item)

@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.models.Note
 import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentMyBinding
-import com.example.mynotepad.ui.dashboard.DashboardViewModel
+import kotlinx.coroutines.launch
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val ARG_PARAM1 = "param1"
@@ -34,11 +36,13 @@ class EditNote : Fragment() {
     private  var _binding: FragmentMyBinding?=null
     private val navArgs : EditNoteArgs by navArgs()
     var idNoteArg:Int =0
+    var editTextNote = ""
+
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
 
-    private val viewModel by viewModel<DashboardViewModel>()
+    private val viewModel by viewModel<EditNoteViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +53,9 @@ class EditNote : Fragment() {
             idNote = it.getInt(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        idNoteArg=navArgs.idNote
+
 
 val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
     Log.v("a", "my fr callBack button back ")
@@ -62,14 +69,19 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
         savedInstanceState: Bundle?
     ): View? {
 
-        idNoteArg=navArgs.idNote
+
+
         _binding= FragmentMyBinding.inflate(inflater, container, false)
 
-        Log.v("a", "EditNote idNoteArg=$idNoteArg ")
+        val  editText: EditText
+        editText=binding.textInputEditText
+        editTextNote=viewModel.editTextNote
+        editText.setText(editTextNote)
+
         val toolbar=binding.toolbar
         toolbar.setTitle("my frag")
         toolbar.inflateMenu(R.menu.toolbar_menu)
-toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
+        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
         toolbar.setNavigationOnClickListener{
 
             findNavController().popBackStack()
@@ -80,14 +92,21 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
             when(it.itemId){
                 R.id.action_save ->{
                     Log.v("a", "click listener action save ")
+                    lifecycleScope.launch{
+                        viewModel.saveNote(Note(idNoteArg,editTextNote))
+                    }
                     true
                 }
                 R.id.action_search ->{
                     Log.v("a", "click listener action search ")
                     true
                 }
-                R.id.action_user ->{
+                R.id.action_delete ->{
                     Log.v("a", "click listener action user ")
+                    lifecycleScope.launch{
+                        viewModel.delNote(idNoteArg)
+                    }
+                    findNavController().popBackStack()
                     true
                 }
 
@@ -96,13 +115,35 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
         }
 
 
+        //Log.v("a", "EditNote editTextNote=$editTextNote ")
+        if (idNoteArg!=-1){
+            if (editTextNote.isEmpty()){
 
-        val editText: EditText
-        editText=binding.textInputEditText
+                lifecycleScope.launch{
+                     viewModel.getNoteFromId(idNoteArg)
 
+                    editTextNote=viewModel.saveText
+                    Log.v("a", "EditNote editTextNote 2 =$editTextNote ")
+                    editText.setText(editTextNote)
+                }
+
+            }
+
+        }else idNoteArg=0
+
+
+
+
+
+
+//        viewModel.editTextNote.observe(viewLifecycleOwner){
+//
+//                value->editText.setText(value)
+//
+//        }
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-
+                editTextNote= p0.toString()
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -128,7 +169,8 @@ toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
     }
     override fun onDestroyView() {
         super.onDestroyView()
-
+viewModel.saveText(  editTextNote)
+        Log.v("a", "My fragment onDestroyView  ")
     }
 
     companion object {

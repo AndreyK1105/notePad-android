@@ -17,10 +17,10 @@
         android:title="Search"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_user"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:id="@+id/action_delete"
+        android:icon="@drawable/baseline_delete_outline_24"
         android:orderInCategory="200"
-        android:title="User"
+        android:title="Delete"
         app:showAsAction="ifRoom" />
 
 </menu>
