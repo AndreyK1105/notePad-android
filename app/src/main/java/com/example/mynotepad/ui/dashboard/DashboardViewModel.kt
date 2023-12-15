@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.domain.models.Note
-import com.example.domain.repositoriy.NoteRepository
 import com.example.domain.usecase.AddNoteUseCase
 import com.example.domain.usecase.DelNoteUseCase
 import com.example.domain.usecase.GetNotesUseCase
@@ -30,21 +29,21 @@ class DashboardViewModel(
     // private val _notes=MutableLiveData<List<Note>>().apply { value=[] }
     // val notes: LiveData<List<Note>>=_notes
 
-    fun addNote(newText: String) {
-
-viewModelScope.launch {
-    addNoteUseCase.execute(Note(0,newText))
-}
-
-
-
-
-
-
-        _text.postValue(newText)
-        Log.v("a", "set Text")
-        Log.v("a", text.value.toString())
-    }
+//    fun addNote(newText: String) {
+//
+//viewModelScope.launch {
+//    addNoteUseCase.execute(Note(0,newText,0))
+//}
+//
+//
+//
+//
+//
+//
+//        _text.postValue(newText)
+//        Log.v("a", "set Text")
+//        Log.v("a", text.value.toString())
+//    }
       fun delNote(id:Int){
         viewModelScope.launch {
             delNoteUseCase.execute(id)

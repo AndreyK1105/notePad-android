@@ -93,7 +93,8 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
                 R.id.action_save ->{
                     Log.v("a", "click listener action save ")
                     lifecycleScope.launch{
-                        viewModel.saveNote(Note(idNoteArg,editTextNote))
+                       val currentData=System.currentTimeMillis()
+                        viewModel.saveNote(Note(idNoteArg, editTextNote, currentData ))
                     }
                     true
                 }

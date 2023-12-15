@@ -22,7 +22,7 @@ class RoomNoteStorage(
 
                 val notes = arrayListOf<NoteRepositoryEntity>()
                 for (note in value) {
-                    notes.add(NoteRepositoryEntity(note.id, note.note))
+                    notes.add(NoteRepositoryEntity(note.id, note.note, note.noteLong.toLong()))
                 }
                 emit(notes.toList())
             }
@@ -33,7 +33,8 @@ class RoomNoteStorage(
             it.map { entity ->
                 NoteRepositoryEntity(
                     id = entity.id,
-                    textNote = entity.note
+                    textNote = entity.note,
+                    dateLong = entity.noteLong.toLong()
                 )
             }
         }//  NoteRepositoryEntity(id= it , textNote = it.note) }
@@ -44,19 +45,19 @@ class RoomNoteStorage(
     override suspend fun getNote(id: Int): NoteRepositoryEntity {
         val noteRoomEntity = notesDao.getById(id)
         if (noteRoomEntity != null) {
-            return NoteRepositoryEntity(id = noteRoomEntity.id, textNote = noteRoomEntity.note)
+            return NoteRepositoryEntity(id = noteRoomEntity.id, textNote = noteRoomEntity.note, dateLong = noteRoomEntity.noteLong.toLong())
         }
-        return NoteRepositoryEntity(id = 0, textNote = "")
+        return NoteRepositoryEntity(id = 0, textNote = "",0)
     }
 
     override suspend fun addNote(note: Note): Boolean {
-        notesDao.createNote(NoteRoomEntity(id = note.id, note = note.textNote))
+        notesDao.createNote(NoteRoomEntity(id = note.id, note = note.textNote, noteLong = note.dateLong.toInt()))
 
         return true//   TODO("Not yet implemented")
     }
 
     override suspend fun delNote(id: Int): Boolean {
-        val note= NoteRoomEntity(id=id, note = ""  )
+        val note= NoteRoomEntity(id=id, note = "" ,0 )
         val resultDel = notesDao.delNote(note)
         return resultDel != null
 

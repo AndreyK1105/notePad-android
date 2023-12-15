@@ -5,22 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.Note
-import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentDashboardBinding
 import com.example.mynotepad.ui.editnote.EditNoteArgs
 import com.example.mynotepad.ui.home.HomeViewModel
 import com.example.mynotepad.ui.home.MyModel
-import com.example.mynotepad.ui.notifications.NotificationsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DashboardFragment : Fragment(), AdapterNotes.RecyclerItemListener {
@@ -34,7 +26,7 @@ private val viewModel by viewModel<DashboardViewModel>()
     // This property is only valid between onCreateView and
     // onDestroyView.
 
-    var notes: List<Note> = listOf(Note(1,"qqq"))
+    var notes: List<Note> = listOf(Note(1,"qqq",0))
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -60,10 +52,10 @@ val arg= EditNoteArgs(-1)
         recyclerViewNotes.adapter=notesAdapter
         viewModel.notes.observe(viewLifecycleOwner){
                 value->notes=value
-            //Log.v("a","List Notes size ${notes.size}" )
+            Log.v("a","dashboarFr List Notes size ${notes.size}" )
             recyclerViewNotes.adapter=AdapterNotes(value, this)
 
-            idLast=notes[notes.lastIndex].id
+           // idLast=notes[notes.lastIndex].id
         }
        // recyclerViewNotes.adapter.
 

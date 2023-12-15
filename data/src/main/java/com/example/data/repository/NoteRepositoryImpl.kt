@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 
 class NoteRepositoryImpl (private val noteStorage: NoteStorage,
 
@@ -22,7 +21,7 @@ class NoteRepositoryImpl (private val noteStorage: NoteStorage,
             flow{
                 val notes = arrayListOf<Note>()
                 for (note in value) {
-                    notes.add(Note(note.id, note.textNote))
+                    notes.add(Note(note.id, note.textNote, note.dateLong))
 
                 }
                 emit(notes.toList())
@@ -37,7 +36,7 @@ class NoteRepositoryImpl (private val noteStorage: NoteStorage,
            flow{
                val notes = arrayListOf<Note>()
                for (note in value) {
-                   notes.add(Note(note.id, note.textNote))
+                   notes.add(Note(note.id, note.textNote, note.dateLong))
 
                }
                emit(notes.toList())
@@ -51,7 +50,7 @@ class NoteRepositoryImpl (private val noteStorage: NoteStorage,
 
     override suspend fun getNote(id: Int): Note {
        val noteRepositoryEntity=noteStorage.getNote(id)
-        return Note(noteRepositoryEntity.id, noteRepositoryEntity.textNote)
+        return Note(noteRepositoryEntity.id, noteRepositoryEntity.textNote, noteRepositoryEntity.dateLong)
     }
 
     override suspend fun addNote(note: Note): Boolean {

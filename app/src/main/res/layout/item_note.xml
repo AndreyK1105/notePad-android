@@ -31,13 +31,22 @@
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <TextView
-        android:id="@+id/dataNote"
+        android:id="@+id/dateNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="dataNote"
         app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/itemNote" />
+
+    <TextView
+        android:id="@+id/dateLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/dateNote"
         app:layout_constraintTop_toBottomOf="@+id/itemNote" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
