@@ -91,10 +91,14 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
         toolbar.setOnMenuItemClickListener{
             when(it.itemId){
                 R.id.action_save ->{
-                    Log.v("a", "click listener action save ")
+
                     lifecycleScope.launch{
-                       val currentData=System.currentTimeMillis()
-                        viewModel.saveNote(Note(idNoteArg, editTextNote, currentData ))
+
+                       val currentData=System.currentTimeMillis()/1000
+
+
+                     //   Log.v("a", "click listener action save current millisec/1000.toInt= $currentDataInt")
+                        viewModel.saveNote(Note(idNoteArg, editTextNote, currentData.toLong() ))
                     }
                     true
                 }

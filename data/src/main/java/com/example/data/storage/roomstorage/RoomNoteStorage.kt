@@ -1,5 +1,6 @@
 package com.example.data.storage.roomstorage
 
+import android.util.Log
 import com.example.data.repository.NoteRepositoryEntity
 import com.example.data.storage.NoteStorage
 import com.example.data.storage.roomstorage.notes.entities.NoteRoomEntity
@@ -23,6 +24,7 @@ class RoomNoteStorage(
                 val notes = arrayListOf<NoteRepositoryEntity>()
                 for (note in value) {
                     notes.add(NoteRepositoryEntity(note.id, note.note, note.noteLong.toLong()))
+
                 }
                 emit(notes.toList())
             }
@@ -52,7 +54,8 @@ class RoomNoteStorage(
 
     override suspend fun addNote(note: Note): Boolean {
         notesDao.createNote(NoteRoomEntity(id = note.id, note = note.textNote, noteLong = note.dateLong.toInt()))
-
+        Log.v("a","roomNoteStorage note.dateLong= ${note.dateLong}" )
+        Log.v("a","roomNoteStorage note.dateLong.toInt= ${note.dateLong.toInt()}" )
         return true//   TODO("Not yet implemented")
     }
 

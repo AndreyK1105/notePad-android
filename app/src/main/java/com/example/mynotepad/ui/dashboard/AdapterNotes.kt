@@ -1,6 +1,7 @@
 package com.example.mynotepad.ui.dashboard
 
 import android.content.DialogInterface.OnClickListener
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.Note
 import com.example.mynotepad.R
 import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class AdapterNotes(private val notes: List<Note>,
                    private val listener: RecyclerItemListener
@@ -52,8 +55,9 @@ view.setOnClickListener(this)
        // Log.v("a","adapter bnind ${ notes[0].textNote}" )
         val item=notes[position]
        holder.textNote.text="${item.textNote.trimEnd() }"
-        holder.textDate.text=item.dateLong.toString()
-        holder.textDateLong.text=item.id.toString()
+        holder.textDate.text=SimpleDateFormat("dd-MM-yy").format(item.dateLong*1000) //  Date(item.dateLong).toDate
+        holder.textDateLong.text="id:${item.id.toString()}"
+
 //        holder.itemView.setOnClickListener{
 //           if (onClickListener!=null){
 //               onClickListener!!.onClick(position, item)
