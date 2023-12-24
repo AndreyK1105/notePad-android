@@ -6,6 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".ui.notifications.NotificationsFragment">
 
+    <ImageButton
+        android:id="@+id/buttonMoveMarkLeft"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:rotation="0"
+        android:rotationX="-0"
+        android:src="@android:drawable/ic_media_rew"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drawView" />
+
+    <ImageButton
+        android:id="@+id/buttonMoveMarkRight"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:rotation="0"
+        android:rotationX="-0"
+        android:src="@android:drawable/ic_media_ff"
+        app:layout_constraintEnd_toEndOf="@+id/drawView"
+        app:layout_constraintTop_toBottomOf="@+id/drawView" />
+
     <com.example.mynotepad.ui.notifications.DrawView
         android:id="@+id/drawView"
         android:layout_width="0dp"
@@ -18,25 +42,50 @@
     </com.example.mynotepad.ui.notifications.DrawView>
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/editSizeTile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="number"
+        android:hint="@string/sizeTile"
+        android:inputType="number|numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+
+    <EditText
+        android:id="@+id/editSizeSquare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/sizeSquare"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/editSizeTile"
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+
+    <EditText
+        android:id="@+id/editSizeGap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/sizeGap"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editSizeTile" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@+id/drawView"
-        app:layout_constraintTop_toBottomOf="@+id/drawView"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMoveMarkLeft"
+        app:selectionRequired="true"
         app:singleLine="true"
-        app:singleSelection="true"
-        app:selectionRequired="true">
+        app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipStart"
@@ -58,8 +107,6 @@
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="@string/middle" />
-
-
 
 
     </com.google.android.material.chip.ChipGroup>

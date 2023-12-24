@@ -1,15 +1,11 @@
 package com.example.mynotepad.ui.notifications
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mynotepad.databinding.FragmentNotificationsBinding
@@ -35,27 +31,64 @@ class NotificationsFragment : Fragment() {
         val root: View = binding.root
 
         val drawView:DrawView=binding.drawView
-        val editTextNumber=binding.editTextNumber2
+        val buttonMoveMarkLeft=binding.buttonMoveMarkLeft
+        val buttonMoveMarkRight=binding.buttonMoveMarkRight
 
+        buttonMoveMarkLeft.setOnClickListener(){drawView.moveMarkerToLeft()}
+        buttonMoveMarkRight.setOnClickListener(){drawView.moveMarkerToRight()}
 
+        val editSizeTile=binding.editSizeTile
 
-        editTextNumber.setOnKeyListener(object :View.OnKeyListener{
+        editSizeTile.setOnKeyListener(object :View.OnKeyListener{
             override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
                 if (p2?.action==KeyEvent.ACTION_DOWN&&
                     p1==KeyEvent.KEYCODE_ENTER){
-                    val enterSize=editTextNumber.text.toString()
+                    val enterSize=editSizeTile.text.toString()
                     Log.v("a","NotificationsFragment  enterSize=$enterSize  ")
-                    drawView.changeTile(enterSize.toInt())
+                    drawView.changeTile(enterSize.toFloat())
 
-                   editTextNumber.clearFocus()
-                    editTextNumber.isCursorVisible=false
+                   editSizeTile.clearFocus()
+                    //editSizeTile.isCursorVisible=false
+                    return true
+                }
+                return false
+            }
+        })
+        val editSizeSquare=binding.editSizeSquare
+
+        editSizeSquare.setOnKeyListener(object :View.OnKeyListener{
+            override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
+                if (p2?.action==KeyEvent.ACTION_DOWN&&
+                    p1==KeyEvent.KEYCODE_ENTER){
+                    val enterSize=editSizeSquare.text.toString()
+
+                    drawView.changeSquare(enterSize.toFloat())
+
+                    editSizeSquare.clearFocus()
+                    //editSizeSquare.isCursorVisible=false
                     return true
                 }
                 return false
             }
         })
 
+        val editSizeGap=binding.editSizeGap
 
+        editSizeGap.setOnKeyListener(object :View.OnKeyListener{
+            override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
+                if (p2?.action==KeyEvent.ACTION_DOWN&&
+                    p1==KeyEvent.KEYCODE_ENTER){
+                    val enterSize=editSizeGap.text.toString()
+
+                     drawView.changeGap(enterSize.toFloat())
+
+                    editSizeGap.clearFocus()
+                  //  editSizeGap.isCursorVisible=false
+                    return true
+                }
+                return false
+            }
+        })
 //        val textView: TextView = binding.textNotifications
 //        notificationsViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
@@ -81,6 +114,13 @@ class NotificationsFragment : Fragment() {
         Log.v("a","NotificationsFragment  setOnCheckedStateChangeListener chekedChip = $chekedChip ")
 
             chipGroup.setOnCheckedStateChangeListener{group, chekedChip ->
+if (chekedChip!=null && chekedChip.last()==binding.chipStart.id ){
+    drawView.setAlignmentStart()
+}else if (chekedChip!=null && chekedChip.last()==binding.chipCenter.id ){
+    drawView.setAlignmentCenter()
+}else if (chekedChip!=null && chekedChip.last()==binding.chipMidle.id ){
+    drawView.setAlignmentMiddle()
+}
             Log.v("a","NotificationsFragment  setOnCheckedStateChangeListener chekedChip = $chekedChip  chipGroup=$group "
             )
 
