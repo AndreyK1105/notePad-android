@@ -16,6 +16,7 @@ class DrawView(context:Context, attrs:AttributeSet) : View(context,attrs) {
     private val paintSquare= Paint()
     private val paintSquareBorder= Paint()
     private val paintMarkerLine= Paint()
+    private val paintMarkerText= Paint()
 
     //private val paintSquareBorder= Paint()
     var sizeTile=420f
@@ -175,6 +176,12 @@ amountTilesFl=sizeSquare/(sizeTile+sizeGap)+1
         paintMarkerLine.color=Color.RED
         paintMarkerLine.strokeWidth=5f
 
+        paintMarkerText.style=Paint.Style.STROKE
+        paintMarkerText.color=Color.WHITE
+        paintMarkerText.strokeWidth=1f
+        paintMarkerText.textSize= 25F
+
+
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -221,6 +228,9 @@ for (i in 1..amountTiles){
 }
         canvas.drawRoundRect (leftSquare,topSquare,rightSquare,bottomSquare,5f,5f, paintSquareBorder )
         canvas.drawLine(positionMarker, topMarkerLineY, positionMarker ,bottomMarkerLineY, paintMarkerLine)
+
+        canvas.drawText("${((positionMarker-leftSquare+sizeGapDp)/scale).roundToInt()}", positionMarker-70,height-20f,paintMarkerText)
+
 
 
     }
