@@ -29,27 +29,32 @@ class DrawView(context:Context, attrs:AttributeSet) : View(context,attrs) {
    // Log.v("a","drawView  amountTiles= $amountTiles" )
    var sizeTileDpWithGap=0//(width-40)/amountTiles
     var scale:Float =0f// sizeTileDpWithGap.toFloat()/(sizeTile.toFloat()+sizeGap.toFloat())
-    var sizeTileDp=0//sizeTile*scale
-    var sizeSquareDp=0//sizeSquare*scale
-    var sizeGapDp=0//sizeGap*scale
+    var sizeTileDp=0f//sizeTile*scale
+    var sizeSquareDp=0f//sizeSquare*scale
+    var sizeGapDp=0f//sizeGap*scale
 
 
 
     var leftSquare=0f//20f+sizeTileDp/2
     var rightSquare=0f//leftSquare+sizeSquareDp
-    val topSquare=50f
+    val topSquare=40f
     var bottomSquare=height-50f
     //val bottomSquare=width.coerceAtMost(height)/2f
 
-    val pts:FloatArray = floatArrayOf( 5f,10f, 25f,50f, 125f,50f,35f,80f)
+     var remainderTileStartSquare=0
+     var partTileStartSquare=0
+
+    var remainderTileEndtSquare=0
+    var partTileEndSquare=0
 
     var rightTile=0f//20f+sizeTileDp
     var topTile=70f
     var bottomTile=height-70f
-    private val topMarkerLineY=topTile
+    private val topMarkerLineY=topTile-10
     private var bottomMarkerLineY=bottomTile+30
     //private  var markerLineX=0f
     private var positionMarker=0f
+    private val atrib:Atrib=Atrib(sizeTile, sizeSquare, sizeGap, true, false, false )
 
 
 
@@ -62,9 +67,9 @@ amountTilesFl=sizeSquare/(sizeTile+sizeGap)+1
      amountTiles=amountTilesFl.roundToInt()
         sizeTileDpWithGap=(width-40)/amountTiles
         scale = sizeTileDpWithGap/(sizeTile+sizeGap)
-        sizeTileDp=(sizeTile*scale).toInt()
-        sizeSquareDp=(sizeSquare*scale).toInt()
-        sizeGapDp=(sizeGap*scale).toInt()
+        sizeTileDp=(sizeTile*scale)
+        sizeSquareDp=(sizeSquare*scale)
+        sizeGapDp=(sizeGap*scale)
 
         leftSquare=20f+sizeTileDp/2
         rightSquare=leftSquare+sizeSquareDp
@@ -77,21 +82,45 @@ amountTilesFl=sizeSquare/(sizeTile+sizeGap)+1
             rightSquare=leftSquare+sizeSquareDp
             leftTile=leftSquare
             rightTile=leftTile+sizeTileDp
+
+            remainderTileStartSquare=0
+            partTileStartSquare=sizeTile.roundToInt()
+
+            partTileEndSquare=(sizeSquare%(sizeTile+sizeGap)).roundToInt()
+            remainderTileEndtSquare=(sizeTile-partTileEndSquare).roundToInt()
+
+            Log.v("a","drawView  sizeSquare/(sizeTile+sizeGap)= ${sizeSquare / (sizeTile + sizeGap)}" )
         }else if(atrib.alignmentCenter){
             leftSquare=(width-sizeSquareDp.toFloat())/2
             rightSquare=leftSquare+sizeSquareDp
-            leftTile=(width/2)%sizeTileDp.toFloat()
+            //leftTile=(sizeSquareDp/2)%(sizeTileDp+sizeGapDp).toFloat()+leftSquare-sizeTileDp-sizeGapDp/2 // added -leftSquare
+            leftTile=((sizeSquare/2)%(sizeTile+sizeGap))*scale+leftSquare-sizeTileDp-sizeGapDp/2
             rightTile=leftTile+sizeTileDp
-            Log.v("a","drawView  leftTile= $leftTile" )
+           // Log.v("a","drawView  leftTile= $leftTile" )
+
+            partTileStartSquare=((sizeSquare/2)%(sizeTile+sizeGap)-sizeGap/2).roundToInt()
+            remainderTileStartSquare=(sizeTile-partTileStartSquare).roundToInt()
+
+            partTileEndSquare=partTileStartSquare
+            remainderTileEndtSquare=remainderTileStartSquare
         }else if(atrib.alignmentMiddle){
-            leftSquare=(width-sizeSquareDp.toFloat())/2
+            leftSquare=(width-sizeSquareDp)/2
             rightSquare=leftSquare+sizeSquareDp
-            leftTile=(width/2)%sizeTileDp.toFloat()-sizeTileDp/2
+            leftTile=(width/2)%(sizeTileDp+sizeGapDp)-sizeTileDp/2
             rightTile=leftTile+sizeTileDp
+
+            partTileStartSquare=(((sizeSquare/2-(sizeTile+sizeGap)/2))%(sizeTile+sizeGap)).roundToInt()
+            remainderTileStartSquare=(sizeTile-partTileStartSquare).roundToInt()
+
+            partTileEndSquare=partTileStartSquare
+            remainderTileEndtSquare=remainderTileStartSquare
         }
       //  markerLineX=rightTile
-        positionMarker=rightTile
+
+
+        positionMarker=rightTile+sizeGapDp
         bottomMarkerLineY=bottomTile+50
+
 //        topTile=40f
 //        bottomTile=height-40f
 
@@ -151,7 +180,12 @@ amountTilesFl=sizeSquare/(sizeTile+sizeGap)+1
         Log.v("a","drawView  sizeTileDp= $sizeTileDp" )
         // start setting parametr size tile, square
 
-        val atrib:Atrib= Atrib(250f, 1520f, 3f, false,false,true)
+        //val atrib:Atrib= Atrib(250f, 1000f, 2f, true,false,false)
+        atrib.sizeTile=250f
+        atrib.sizeSquare=1000f
+        atrib.sizeGap=2f
+        atrib.start()
+
 
         calcSize(atrib)
 
@@ -173,7 +207,7 @@ amountTilesFl=sizeSquare/(sizeTile+sizeGap)+1
         paintTailsStroke.strokeWidth=1f
 
         paintMarkerLine.style=Paint.Style.STROKE
-        paintMarkerLine.color=Color.RED
+        paintMarkerLine.color=Color.GREEN
         paintMarkerLine.strokeWidth=5f
 
         paintMarkerText.style=Paint.Style.STROKE
@@ -187,98 +221,114 @@ amountTilesFl=sizeSquare/(sizeTile+sizeGap)+1
         super.onDraw(canvas)
 
         if (scale<=0f){
-            val atrib=Atrib(sizeTile, sizeSquare, sizeGap,true,false, false  )
+           // val atrib=Atrib(sizeTile, sizeSquare, sizeGap,true,false, false  )
                     calcSize(atrib)
         }
 
 
-//        val amountTilesFl=sizeSquare.toFloat()/(sizeTile+sizeGap)+1
-//        val amountTiles=amountTilesFl.roundToInt()
-//        Log.v("a","drawView  amountTiles= $amountTiles" )
-//        val sizeTileDpWithGap=(width-40)/amountTiles
-//        val scale:Float = sizeTileDpWithGap.toFloat()/(sizeTile.toFloat()+sizeGap.toFloat())
-//        val sizeTileDp=sizeTile*scale
-//        val sizeSquareDp=sizeSquare*scale
-//        val sizeGapDp=sizeGap*scale
-//
-//
-//
-//        val leftSquare=20f+sizeTileDp/2
-//        val rightSquare=leftSquare+sizeSquareDp
-//        val topSquare=20f
-//        val bottomSquare=height-20f
-//
-//
-//        //val bottomSquare=width.coerceAtMost(height)/2f
-//
-//        val pts:FloatArray = floatArrayOf( 5f,10f, 25f,50f, 125f,50f,35f,80f)
-//
-//        val rightTile=20f+sizeTileDp
-//        val topTile=40f
-//        val bottomTile=height-40f
-//        canvas.drawRoundRect (leftSquare,topSquare,rightSquare,bottomSquare,5f,5f, paintSquare )
-//        Log.v("a","drawView  sizeTileDp= $sizeTileDp" )
-//        Log.v("a","drawView  sizeGapDp= $sizeGapDp" )
+
 for (i in 1..amountTiles){
     canvas.drawRoundRect (leftTile+sizeTileDp*(i-1)+sizeGapDp*(i-1),topTile,rightTile+sizeTileDp*(i-1)+sizeGapDp*(i-1),bottomTile,5f,5f, paintTails )
     canvas.drawRoundRect (leftTile+sizeTileDp*(i-1)+sizeGapDp*(i-1),topTile,rightTile+sizeTileDp*(i-1)+sizeGapDp*(i-1),bottomTile,5f,5f, paintTailsStroke )
 
-    Log.v("a","drawView  leftTile+sizeTileDp*(i-1)+2*i= ${leftTile + sizeTileDp * (i - 1) + 2 * i}" )
+
 
 }
         canvas.drawRoundRect (leftSquare,topSquare,rightSquare,bottomSquare,5f,5f, paintSquareBorder )
         canvas.drawLine(positionMarker, topMarkerLineY, positionMarker ,bottomMarkerLineY, paintMarkerLine)
 
-        canvas.drawText("${((positionMarker-leftSquare+sizeGapDp)/scale).roundToInt()}", positionMarker-70,height-20f,paintMarkerText)
+        //canvas.drawText("${((positionMarker-leftSquare+sizeGapDp)/scale).roundToInt()}", positionMarker-70,height-20f,paintMarkerText)
+        val textLeft=((positionMarker-leftSquare)/scale).roundToInt().toString()
+        val positionTextLeft=positionMarker-textLeft.length*16
+        canvas.drawText(textLeft, positionTextLeft,height-20f,paintMarkerText)
 
+        val textRight=(sizeSquare-((positionMarker-leftSquare)/scale)).roundToInt().toString()
+        canvas.drawText(textRight, positionMarker+10,height-20f,paintMarkerText)
+
+        val textPartTileEnd=partTileEndSquare.toString()
+        val positionTextPartTileEnd=rightSquare-textPartTileEnd.length*16
+
+        canvas.drawText(partTileEndSquare.toString(), positionTextPartTileEnd,topSquare+25f,paintMarkerText)
+        canvas.drawText(remainderTileEndtSquare.toString(), rightSquare+5,topSquare+25f,paintMarkerText)
+
+
+        val textRemaindTileStart=remainderTileStartSquare.toString()
+        val positionTextRemaindTileStart=leftSquare-textRemaindTileStart.length*16
+
+        canvas.drawText(textRemaindTileStart, positionTextRemaindTileStart,topSquare+25f,paintMarkerText)
+        canvas.drawText(partTileStartSquare.toString(), leftSquare+5,topSquare+25f,paintMarkerText)
+
+        canvas.drawText(sizeSquare.toInt().toString(), width/2f,25f,paintMarkerText)
 
 
     }
 
     fun setAlignmentStart(){
-        val atrib= Atrib(sizeTile, sizeSquare, sizeGap, alignmentStart = true, alignmentCenter = false, alignmentMiddle = false  )
+       // val atrib= Atrib(sizeTile, sizeSquare, sizeGap, alignmentStart = true, alignmentCenter = false, alignmentMiddle = false  )
+        atrib.start()
         calcSize(atrib)
         invalidate()
     }
 
     fun setAlignmentCenter(){
-        val atrib= Atrib(sizeTile, sizeSquare, sizeGap, alignmentStart = false, alignmentCenter = true, alignmentMiddle = false  )
+        //val atrib= Atrib(sizeTile, sizeSquare, sizeGap, alignmentStart = false, alignmentCenter = true, alignmentMiddle = false  )
+        atrib.centre()
         calcSize(atrib)
         invalidate()
     }
 
     fun setAlignmentMiddle(){
-        val atrib= Atrib(sizeTile, sizeSquare, sizeGap, alignmentStart = false, alignmentCenter = false, alignmentMiddle = true  )
+        //val atrib= Atrib(sizeTile, sizeSquare, sizeGap, alignmentStart = false, alignmentCenter = false, alignmentMiddle = true  )
+        atrib.middle()
         calcSize(atrib)
         invalidate()
     }
 
     fun changeTile(size:Float){
-        val atrib= Atrib(size, sizeSquare, sizeGap, alignmentStart = false, alignmentCenter = false, alignmentMiddle = true  )
+        //val atrib= Atrib(size, sizeSquare, sizeGap, alignmentStart = true, alignmentCenter = false, alignmentMiddle = false  )
+        atrib.sizeTile=size
         calcSize(atrib)
         invalidate()
     }
 
     fun changeSquare(size:Float){
-        val atrib= Atrib(sizeTile, size, sizeGap, alignmentStart = false, alignmentCenter = false, alignmentMiddle = true  )
+        //val atrib= Atrib(sizeTile, size, sizeGap, alignmentStart = true, alignmentCenter = false, alignmentMiddle = false  )
+        atrib.sizeSquare=size
         calcSize(atrib)
         //sizeSquare=size
 
         invalidate()
     }
     fun changeGap(size:Float){
-        val atrib= Atrib(sizeTile, sizeSquare, size, alignmentStart = false, alignmentCenter = false, alignmentMiddle = true  )
+        //val atrib= Atrib(sizeTile, sizeSquare, size, alignmentStart = true, alignmentCenter = false, alignmentMiddle = false  )
+        atrib.sizeGap=size
         calcSize(atrib)
         invalidate()
     }
     class Atrib(sizeTile:Float, sizeSquare:Float, sizeGap:Float, alignmentStart:Boolean, alignmentCenter:Boolean, alignmentMiddle:Boolean ) {
-        val sizeTile:Float=sizeTile
-        val sizeSquare:Float=sizeSquare
-        val sizeGap:Float=sizeGap
-        val alignmentStart:Boolean=alignmentStart
-        val alignmentCenter:Boolean=alignmentCenter
-        val alignmentMiddle:Boolean=alignmentMiddle
+        var sizeTile:Float=sizeTile
+        var sizeSquare:Float=sizeSquare
+        var sizeGap:Float=sizeGap
+        var alignmentStart:Boolean=alignmentStart
+        var alignmentCenter:Boolean=alignmentCenter
+        var alignmentMiddle:Boolean=alignmentMiddle
+fun start(){
+    alignmentStart=true
+    alignmentMiddle=false
+    alignmentCenter=false
+    }
 
+        fun centre(){
+            alignmentStart=false
+            alignmentMiddle=false
+            alignmentCenter=true
+        }
+
+        fun middle(){
+            alignmentStart=false
+            alignmentMiddle=true
+            alignmentCenter=false
+        }
 
     }
 
