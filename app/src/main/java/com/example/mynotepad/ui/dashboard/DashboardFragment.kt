@@ -14,6 +14,7 @@ import com.example.mynotepad.ui.editnote.EditNoteArgs
 import com.example.mynotepad.ui.home.HomeViewModel
 import com.example.mynotepad.ui.home.MyModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Calendar
 
 class DashboardFragment : Fragment(), AdapterNotes.RecyclerItemListener {
 private val myModel=MyModel(wname = "model1" , age = 12 )
@@ -64,6 +65,7 @@ val arg= EditNoteArgs(-1)
 
         val floatingButton=binding.floatingAddNote
         floatingButton.setOnClickListener{
+
            // val action=
            // bundle.putInt("idNote", -1)
             findNavController().navigate(DashboardFragmentDirections.actionNavigationDashboardToMyFragment())

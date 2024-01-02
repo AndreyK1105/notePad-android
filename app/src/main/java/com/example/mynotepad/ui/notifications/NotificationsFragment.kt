@@ -89,6 +89,7 @@ class NotificationsFragment : Fragment() {
                 return false
             }
         })
+
 //        val textView: TextView = binding.textNotifications
 //        notificationsViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it

@@ -1,9 +1,12 @@
 package com.example.mynotepad.ui.notifications
 
+import android.app.Service
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.IBinder
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -329,6 +332,14 @@ fun start(){
             alignmentMiddle=true
             alignmentCenter=false
         }
+
+    }
+
+    class NewService : Service() {
+        override fun onBind(p0: Intent?): IBinder? {
+            TODO("Not yet implemented")
+        }
+
 
     }
 
