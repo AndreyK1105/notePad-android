@@ -1,6 +1,7 @@
 package com.example.mynotepad.ui.home
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +26,9 @@ private val homeViewModel by viewModel<HomeViewModel>()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    var year= arrayListOf<ArrayList<ArrayList<Day>>>()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +40,10 @@ private val homeViewModel by viewModel<HomeViewModel>()
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        homeViewModel.loadCalendars(1, 2)
+        year= homeViewModel.years
+       // Log.v("a","homefragment year.size=${year}" )
 //val buttonHome: Button=binding.buttonHome
 //        buttonHome.setOnClickListener{
 //            homeViewModel.setModel(model = MyModel("www", 12))
@@ -62,12 +70,16 @@ rightNow.set(2023,5,1)
         //    findNavController().navigate(R.id.action_navigation_home_to_myFragment ,null)
         }
 
-        val dataset = arrayOf("January", "February", "March", "February", "March" ,"February", "March", "February", "March")
-        val customAdapter=CustomAdapter(dataset, recyclerView.context)
+        val monthsName = arrayOf("January", "February", "March", "May", "June" ,"Jule", "March", "February", "March", )
+        val monthsNameRu = listOf("Январь", "Февраль", "Март", "Апрель", "Май" ,"Июнь", "Июль", "Август", "Сентябрь","Октябрь","Ноябрь", "Декабрь" )
+
+
+        val customAdapter=CustomAdapter(year[0], monthsNameRu, recyclerView.context)
 
 //        val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
 //        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
 //recyclerView.layoutManager =linearLayoutManager
+
         recyclerView.adapter=customAdapter
         return root
     }
@@ -78,7 +90,7 @@ rightNow.set(2023,5,1)
         _binding = null
     }
 }
-class CustomAdapter(private val dataSet: Array<String>, private val context: Context ):
+class CustomAdapter(private val dataSet:ArrayList <ArrayList<Day>>,private val monthsNameRu:List<String> , private val context: Context ):
         RecyclerView.Adapter<CustomAdapter.ViewHolder >(){
             class ViewHolder(view:View):RecyclerView.ViewHolder(view){
                 val gridView: GridView
@@ -96,31 +108,26 @@ class CustomAdapter(private val dataSet: Array<String>, private val context: Con
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int =dataSet.size
+    override fun getItemCount(): Int =(dataSet.size)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-      var days : ArrayList<Day> = arrayListOf()
 
-        for (str in 1..7){
-            for(col in 0..5){
-                var dayNum =(str+col*7)-6
-                if (dayNum<=0 || dayNum>31)  dayNum=0
-                val day= Day(dayNum, true, 1, "subscr")
-                days.add(day)
-            }
-        }
-//        for (i in 1..30){
-//          val day= Day(i, true, 1, "subscr")
-//            days.add(day)
-//      }
-        val customGridAdapter=CustomGridAdapter(context, days)
-        holder.gridView.adapter=customGridAdapter
+            //var days : ArrayList<Day> = dataSet[position]
 
-        //  Log.v("recyclerView", "position=$position")
+        val textViewMonth = holder.itemView.findViewById<TextView>(R.id.textViewMonth)
+        //Log.v("a","homeFragm  monthsName= $monthsName" )
+        textViewMonth.setText(monthsNameRu[position])
+        val monthName=monthsNameRu[position]
+            val customGridAdapter=CustomGridAdapter(context, dataSet[position], monthName)
+            holder.gridView.adapter=customGridAdapter
+
+
+
+
 //        holder.monthName.text=dataSet[position]
 //        holder.monthName.setOnClickListener { Log.v("recyclerView", "on click position=$position") }
 //        holder.itemRow.setOnClickListener{Log.v("recyclerView", "on click view position=$position")}
-        holder.itemView
+      //  holder.itemView
 
 
 
@@ -132,7 +139,8 @@ class CustomAdapter(private val dataSet: Array<String>, private val context: Con
 
 class CustomGridAdapter (
     private val context: Context,
-    val days: List<Day>
+    private val days: List<Day>,
+    private val monthsName: String
 ): BaseAdapter(){
     private var layoutInflater: LayoutInflater? = null
     override fun getCount(): Int {
@@ -160,14 +168,17 @@ class CustomGridAdapter (
             convertView = layoutInflater!!.inflate(R.layout.table_row_item, null)
         }
         val textItem= convertView!!.findViewById<TextView>(R.id.textView2)
+
         var dayNum=""
         if (days[position].data != 0){
             dayNum = days[position].data.toString()
         }
 
         textItem.setText(dayNum)
+        if (days[position].isWeekend) textItem.setTextColor(Color.RED)
         convertView.setOnClickListener {
-            Log.v("a","homeFragm  positionGrid= $position" )
+
+            Log.v("a","homeFragm  positionGrid= $dayNum" )
         }
         return convertView
 

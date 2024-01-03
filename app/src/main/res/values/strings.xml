@@ -11,5 +11,12 @@
     <string name="sizeTile">SizeTile</string>
     <string name="sizeSquare">SizeSquare</string>
     <string name="sizeGap">SizeGap</string>
+    <string name="mondayShort">Пн</string>
+    <string name="thusdayShort">Вт</string>
+    <string name="wednShort">Ср</string>
+    <string name="thusdShort">Чт</string>
+    <string name="fridayShort">Пт</string>
+    <string name="saturdayShort">Сб</string>
+    <string name="sundayShort">Вс</string>
 
 </resources>
