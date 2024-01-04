@@ -17,9 +17,12 @@ import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentHomeBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 
 class HomeFragment : Fragment() {
+
 
     private var _binding: FragmentHomeBinding? = null
 private val homeViewModel by viewModel<HomeViewModel>()
@@ -41,7 +44,7 @@ private val homeViewModel by viewModel<HomeViewModel>()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        homeViewModel.loadCalendars(1, 2)
+        homeViewModel.loadCalendars(2024, 2025)
         year= homeViewModel.years
        // Log.v("a","homefragment year.size=${year}" )
 //val buttonHome: Button=binding.buttonHome
@@ -135,6 +138,7 @@ class CustomAdapter(private val dataSet:ArrayList <ArrayList<Day>>,private val m
 
 
     }
+
 }
 
 class CustomGridAdapter (
@@ -142,6 +146,16 @@ class CustomGridAdapter (
     private val days: List<Day>,
     private val monthsName: String
 ): BaseAdapter(){
+    private val weekDays=  listOf<String>(
+        context.getString(R.string.mondayShort),
+        context.getString(R.string.tuesdayShort),
+        context.getString(R.string.wednShort),
+        context.getString(R.string.thursdayShort),
+        context.getString(R.string.fridayShort),
+        context.getString(R.string.saturdayShort),
+        context.getString(R.string.sundayShort),
+    )
+
     private var layoutInflater: LayoutInflater? = null
     override fun getCount(): Int {
        return days.size
@@ -170,15 +184,23 @@ class CustomGridAdapter (
         val textItem= convertView!!.findViewById<TextView>(R.id.textView2)
 
         var dayNum=""
-        if (days[position].data != 0){
-            dayNum = days[position].data.toString()
+        if (days[position].dayNum > 0){
+            dayNum = days[position].dayNum.toString()
+            textItem.setText(dayNum)
+        }else{
+            textItem.setText(weekDays[days[position].dayNum+6 ] )
         }
 
-        textItem.setText(dayNum)
-        if (days[position].isWeekend) textItem.setTextColor(Color.RED)
-        convertView.setOnClickListener {
 
-            Log.v("a","homeFragm  positionGrid= $dayNum" )
+        if (days[position].isWeekend) textItem.setTextColor(Color.RED)
+        if (!days[position].isCurrentMonth) textItem.setTextColor(Color.GRAY)
+
+        convertView.setOnClickListener {
+            val date= Date(days[position].date)
+            val formattedDateAsDigitMonth = SimpleDateFormat("dd/MM/yyyy")
+
+
+            Log.v("a","homeFragm  days[position].date= ${formattedDateAsDigitMonth.format(date)}" )
         }
         return convertView
 
