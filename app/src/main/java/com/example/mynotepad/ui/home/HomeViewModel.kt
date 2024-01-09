@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.domain.models.Day
+import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import java.util.Calendar
 
 
@@ -18,6 +19,7 @@ value = model
     }
 
 
+    val rowsCalendar: ArrayList<ItemRowCalendar> = arrayListOf()
     val years= arrayListOf<ArrayList<ArrayList<Day>>>()
 
     val myModel: LiveData<MyModel> = _text
@@ -30,13 +32,20 @@ value = model
 
     fun loadCalendars(startYear: Int, endYear: Int){
 
+        rowsCalendar.clear()
+
         val date = Calendar.getInstance()
 
         for (year in startYear..endYear){
             date.set(year,0,1)
 
+            rowsCalendar.add(ItemRowCalendar(arrayListOf(), 3, 0, 0, year))
+
             var months= arrayListOf<ArrayList<Day>>()
             for (month in 1..12){
+                rowsCalendar.add(ItemRowCalendar(arrayListOf(), 2, 0, month, year))
+
+
                 date.set(year,month-1,1)
                 var offsetDay=date.get(Calendar.DAY_OF_WEEK)
                 var lengthMonth=date.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -48,16 +57,19 @@ value = model
                 Log.v("home view Model","home view Model offsetDayNew=$offsetDay")
               //  var days : ArrayList<Day> = arrayListOf()
                 var days = arrayListOf<Day>()
+                var isDelLastColumn=true
                 for (str in 1..7){
-                    var isNewStr=true
-                    for(col in 0..6){
+                   // var isNewStr=true
+                    val daysRow: ArrayList<Day> = arrayListOf()
+
+
+                    for(col in 1..6){
+
+
                         var isCurrentMonth =true
                         var dayNum=0
                         var dateMillis=0L
-                        if (isNewStr) {
-                            dayNum = str - 7
-                            isNewStr=false
-                        } else{
+
 
                             dayNum =(str+(col-1)*7)-offsetDay +1
                             date.set(year,month-1,dayNum)
@@ -65,8 +77,15 @@ value = model
                                 dayNum = date.get(Calendar.DATE)
                                 isCurrentMonth=false
                             }
+
+
+
+                        if (col==6 && isCurrentMonth)   isDelLastColumn=false
+
+                        if (col==6 && isDelLastColumn)  continue
+
                              dateMillis=date.timeInMillis
-                        }
+
 
                         var isWeekend = false
                         if (str>5) isWeekend=true
@@ -74,8 +93,11 @@ value = model
                         //Log.v("home view Model","home view Model dateMillis=$dateMillis")
                         val day= Day(dayNum,dateMillis, isWeekend, isCurrentMonth, 1 ,  "subscr")
                         days.add (day)
+
+                        daysRow.add(day)
                         //date.roll(Calendar.DATE,true)
                     }
+                    rowsCalendar.add(ItemRowCalendar(daysRow, 1, str, month, year))
 
                 }
 

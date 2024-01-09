@@ -14,7 +14,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/text_row_item">
+        tools:listitem="@layout/item_calend_row">
 
     </androidx.recyclerview.widget.RecyclerView>
 
