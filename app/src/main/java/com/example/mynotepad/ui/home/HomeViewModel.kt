@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.domain.models.Day
+import com.example.domain.models.Todo
 import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -103,7 +104,7 @@ value = model
                         if (str>5) isWeekend=true
 
                         //Log.v("home view Model","home view Model dateMillis=$dateMillis")
-                        val day= Day(dayNum,dateMillis, isWeekend, isCurrentMonth, 1 ,  "subscr")
+                        val day= Day(dayNum,dateMillis, isWeekend, isCurrentMonth, 1 ,  "subscr", listOf<Todo>())
                         days.add (day)
 
                         daysRow.add(day)
