@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.domain.models.Day
 import com.example.mynotepad.ui.dashboard.ItemRowCalendar
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 
@@ -30,6 +33,15 @@ value = model
 //        Log.v("myModel", myModel.value!!.name)
     }
 
+    suspend fun suspFun() = coroutineScope {launch {
+        for(i in 0..5){
+            delay(400L)
+            println(i)
+        }
+    }
+
+        println("coroutines ")
+    }
     fun loadCalendars(startYear: Int, endYear: Int){
 
         rowsCalendar.clear()

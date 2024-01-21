@@ -1,17 +1,14 @@
 package com.example.data.storage.roomstorage
 
 import android.util.Log
-import com.example.data.repository.NoteRepositoryEntity
+import com.example.data.repository.models.NoteRepositoryEntity
 import com.example.data.storage.NoteStorage
 import com.example.data.storage.roomstorage.notes.entities.NoteRoomEntity
 import com.example.domain.models.Note
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
 
 class RoomNoteStorage(
     private  val notesDao: NotesDao,

@@ -1,6 +1,6 @@
 package com.example.data.storage.sharedstorage
 
-import com.example.data.repository.NoteRepositoryEntity
+import com.example.data.repository.models.NoteRepositoryEntity
 import com.example.data.storage.NoteStorage
 import com.example.domain.models.Note
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,7 @@ class SharedPrefNoteStorage(override val allNotes: Flow<List<NoteRepositoryEntit
         return listFlow
     }
 
-    override suspend fun getNote(id: Int):NoteRepositoryEntity {
+    override suspend fun getNote(id: Int): NoteRepositoryEntity {
        return  NoteRepositoryEntity(id, "default text",0)
     }
 
