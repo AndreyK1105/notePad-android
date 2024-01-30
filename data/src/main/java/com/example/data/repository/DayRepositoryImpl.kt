@@ -9,7 +9,7 @@ import com.example.domain.models.Todo
 import com.example.domain.repositoriy.DayRepository
 
 class DayRepositoryImpl (private val dayStorage: DayStorage, private val dayRepositoryMapper: DayRepositoryMapper): DayRepository {
-    override suspend fun getDay(date: Int): Day? {
+    override suspend fun getDay(date: Long): Day? {
        val dayRepositoryEntity= dayStorage.getDay(date)
         if (dayRepositoryEntity!=null){
           return  dayRepositoryMapper.toDay(dayRepositoryEntity)

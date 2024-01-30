@@ -9,7 +9,7 @@ data class DayRoomEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "day_nym") val dayNum: Int,
     val date: Long,
-    @ColumnInfo(name = "is_weekend")val isWeekend: Int,
-    @ColumnInfo(name = "is_current_month")val isCurrentMonth: Int,
+    @ColumnInfo(name = "is_weekend")val isWeekend: Boolean,
+    @ColumnInfo(name = "is_current_month")val isCurrentMonth: Boolean,
        val subscribe: String,
 )

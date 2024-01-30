@@ -16,9 +16,9 @@ import androidx.room.PrimaryKey
 data class TodoRoomEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
 
-    @ColumnInfo (name = "owner_id") val ownerId : String,
+    @ColumnInfo (name = "owner_id") val ownerId : Int,
 
-    val dateLong :Long,
+    @ColumnInfo(name="date_long") val dateLong :Long,
     val timeStart :Long,
     val timeEnd :Long,
     val describe : String

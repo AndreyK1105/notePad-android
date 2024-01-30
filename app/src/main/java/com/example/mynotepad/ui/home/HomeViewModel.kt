@@ -4,17 +4,28 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
+import com.example.domain.usecase.AddDayUseCase
+import com.example.domain.usecase.GetDayUseCase
 import com.example.mynotepad.ui.dashboard.ItemRowCalendar
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel (
+    private val addDayUseCase: AddDayUseCase,
+    private val getDayUseCase: GetDayUseCase
+): ViewModel() {
     private var model = MyModel(wname = "sss", age = 222222)
+    private val _rowsCalendarLiveData=MutableLiveData<List<ItemRowCalendar>>()
+    val rowsCalendarLiveData: LiveData<List<ItemRowCalendar>>
+        get() = _rowsCalendarLiveData
+
     private val _text = MutableLiveData<MyModel>().apply {
 
         //value = "This is home Fragment"
@@ -34,98 +45,143 @@ value = model
 //        Log.v("myModel", myModel.value!!.name)
     }
 
-    suspend fun suspFun() = coroutineScope {launch {
+     fun suspFun() = viewModelScope.launch {
         for(i in 0..5){
             delay(400L)
             println(i)
-        }
+
     }
 
         println("coroutines ")
     }
     fun loadCalendars(startYear: Int, endYear: Int){
 
+
         rowsCalendar.clear()
 
         val date = Calendar.getInstance()
+        val dateS=date.timeInMillis/1000*1000 // обнуление миллисекунд
+        date.timeInMillis=dateS
 
-        for (year in startYear..endYear){
-            date.set(year,0,1)
+        viewModelScope.launch {
 
-            rowsCalendar.add(ItemRowCalendar(arrayListOf(), 3, 0, 0, year))
+            for (year in startYear..endYear) {
+                date.set(year, 0, 1, 0, 0, 0)
 
-            var months= arrayListOf<ArrayList<Day>>()
-            for (month in 1..12){
-                rowsCalendar.add(ItemRowCalendar(arrayListOf(), 2, 0, month, year))
+                rowsCalendar.add(ItemRowCalendar(arrayListOf(), 3, 0, 0, year))
 
-
-                date.set(year,month-1,1)
-                var offsetDay=date.get(Calendar.DAY_OF_WEEK)
-                var lengthMonth=date.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-                if (offsetDay!=1){
-                    offsetDay--
-                }else offsetDay=7
-
-                Log.v("home view Model","home view Model offsetDayNew=$offsetDay")
-              //  var days : ArrayList<Day> = arrayListOf()
-                var days = arrayListOf<Day>()
-                var isDelLastColumn=true
-                for (str in 1..7){
-                   // var isNewStr=true
-                    val daysRow: ArrayList<Day> = arrayListOf()
+                var months = arrayListOf<ArrayList<Day>>()
+                for (month in 1..12) {
+                    rowsCalendar.add(ItemRowCalendar(arrayListOf(), 2, 0, month, year))
 
 
-                    for(col in 1..6){
+                    date.set(year, month - 1, 1)
+                    var offsetDay = date.get(Calendar.DAY_OF_WEEK)
+                    var lengthMonth = date.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+                    if (offsetDay != 1) {
+                        offsetDay--
+                    } else offsetDay = 7
+
+                    Log.v("home view Model", "home view Model offsetDayNew=$offsetDay")
+                    //  var days : ArrayList<Day> = arrayListOf()
+                    var days = arrayListOf<Day>()
+                    var isDelLastColumn = true
+                    for (str in 1..7) {
+                        // var isNewStr=true
+                        val daysRow: ArrayList<Day> = arrayListOf()
 
 
-                        var isCurrentMonth =true
-                        var dayNum=0
-                        var dateMillis=0L
+                        for (col in 1..6) {
 
 
-                            dayNum =(str+(col-1)*7)-offsetDay +1
-                            date.set(year,month-1,dayNum)
-                            if (dayNum<=0 || dayNum>lengthMonth) {
+                            var isCurrentMonth = true
+                            var dayNum = 0
+                            //var dateMillis=0L
+
+                            dayNum = (str + (col - 1) * 7) - offsetDay + 1
+                            date.set(year, month - 1, dayNum, 0, 0, 0)
+
+                            if (dayNum <= 0 || dayNum > lengthMonth) {
                                 dayNum = date.get(Calendar.DATE)
-                                isCurrentMonth=false
+                                isCurrentMonth = false
                             }
 
 
 
-                        if (col==6 && isCurrentMonth)   isDelLastColumn=false
+                            if (col == 6 && isCurrentMonth) isDelLastColumn = false
 
-                        if (col==6 && isDelLastColumn)  continue
+                            if (col == 6 && isDelLastColumn) continue
 
-                             dateMillis=date.timeInMillis
+                            val dateMillis = date.timeInMillis
+
+                            //val id = dateMillis/10000
+                            var isWeekend = false
+                            if (str > 5) isWeekend = true
+
+                            val day :Day
 
 
-                        var isWeekend = false
-                        if (str>5) isWeekend=true
+                            val dayRoom = getDayUseCase.execute(dateMillis)
 
-                        //Log.v("home view Model","home view Model dateMillis=$dateMillis")
-                        val day= Day(dayNum,dateMillis, isWeekend, isCurrentMonth, 1 ,  "subscr", listOf<Todo>())
-                        days.add (day)
+                            if(dayRoom!=null){
+                                day= dayRoom
 
-                        daysRow.add(day)
-                        //date.roll(Calendar.DATE,true)
+                            } else {
+
+                                // Log.v("homeViewModel ", " dayRoom= ${dayRoom}")
+
+                              //  Log.v("homeViewModel ", " dateMillis= ${dateMillis}")
+
+
+                                //Log.v("home view Model","home view Model dateMillis=$dateMillis")
+                                day = Day(
+                                    dayNum,
+                                    dateMillis,
+                                    isWeekend,
+                                    isCurrentMonth,
+                                    1,
+                                    "subscr",
+                                    listOf<Todo>(
+                                        Todo(
+                                            dateLong = 2222222,
+                                            timeStart = 10,
+                                            timeEnd = 20,
+                                            describe = "todo describe example"
+                                        )
+                                    )
+                                )
+                            }
+                            days.add(day)
+
+                            daysRow.add(day)
+                            //date.roll(Calendar.DATE,true)
+                        }
+                        rowsCalendar.add(ItemRowCalendar(daysRow, 1, str, month, year))
+
+
                     }
-                    rowsCalendar.add(ItemRowCalendar(daysRow, 1, str, month, year))
+
+                    months.add(days)
+
 
                 }
 
-                months.add(days)
-
-
-
-
-
+                years.add(months)
+                // Log.v("homeViewModel ", " years= ${years}")
             }
+            _rowsCalendarLiveData.postValue(rowsCalendar)
 
-            years.add(months)
-           // Log.v("homeViewModel ", " years= ${years}")
         }
        // Log.v("homeViewModel ", " years= ${years}")
+    }
+
+     fun addDay(day: Day){
+
+        viewModelScope.launch {
+            addDayUseCase.execute(day)
+        }
+
     }
 }
 class MyModel(wname:String, age:Int){

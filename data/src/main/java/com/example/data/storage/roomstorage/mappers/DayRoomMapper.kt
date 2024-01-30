@@ -12,8 +12,8 @@ class DayRoomMapper {
         return DayRepositoryEntity(
             dayNum = dayRoomEntity.dayNum,
             date = dayRoomEntity.date,
-            isWeekend = dayRoomEntity.isWeekend!=0,
-            isCurrentMonth = dayRoomEntity.isCurrentMonth!=0,
+            isWeekend = dayRoomEntity.isWeekend,
+            isCurrentMonth = dayRoomEntity.isCurrentMonth,
             id = dayRoomEntity.id,
             subscribe = dayRoomEntity.subscribe,
             todos = todosRepository
@@ -26,8 +26,8 @@ class DayRoomMapper {
             id=0,
             dayNum = dayRepositoryEntity.dayNum,
             date = dayRepositoryEntity.date,
-            isWeekend = if (dayRepositoryEntity.isWeekend) 1 else 0,
-            isCurrentMonth =if (dayRepositoryEntity.isCurrentMonth) 1 else 0,
+            isWeekend = dayRepositoryEntity.isWeekend,
+            isCurrentMonth =dayRepositoryEntity.isCurrentMonth,
             subscribe = dayRepositoryEntity.subscribe
         )
     }

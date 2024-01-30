@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.Flow
 interface DaysDao {
     @Query("SELECT * FROM days_table WHERE date=:date ")
 
-    suspend fun getByDate(date:Int): DayRoomEntity?
+    suspend fun getByDate(date:Long): DayRoomEntity?
 
-    @Query("SELECT*FROM note_table ")
+    @Query("SELECT*FROM days_table ")
     fun getAllDays(): Flow<List<DayRoomEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

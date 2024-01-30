@@ -12,12 +12,19 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.Day
+import com.example.domain.models.Todo
 import com.example.mynotepad.R
 import com.example.mynotepad.databinding.FragmentHomeBinding
 import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -32,11 +39,11 @@ private val homeViewModel by viewModel<HomeViewModel>()
     // onDestroyView.
     private val binding get() = _binding!!
     var year= arrayListOf<ArrayList<ArrayList<Day>>>()
-    var rowsCalendar = arrayListOf<ItemRowCalendar>()
+    var rowsCalendar =listOf<ItemRowCalendar>()
 
 
 
-    override fun onCreateView(
+    override  fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +56,10 @@ private val homeViewModel by viewModel<HomeViewModel>()
 
         homeViewModel.loadCalendars(2023, 2024)
         year= homeViewModel.years
-        rowsCalendar=homeViewModel.rowsCalendar
+
+
+
+      //  rowsCalendar=homeViewModel.rowsCalendar
 
        // Log.v("a","homefragment year.size=${year}" )
 //val buttonHome: Button=binding.buttonHome
@@ -81,14 +91,18 @@ rightNow.set(2023,5,1)
         val monthsName = arrayOf("January", "February", "March", "May", "June" ,"Jule", "March", "February", "March", )
         val monthsNameRu = listOf("Январь", "Февраль", "Март", "Апрель", "Май" ,"Июнь", "Июль", "Август", "Сентябрь","Октябрь","Ноябрь", "Декабрь" )
 
+        homeViewModel.rowsCalendarLiveData.observe(viewLifecycleOwner, Observer<List<ItemRowCalendar>> {rowsCalendar=it
+            val customAdapter=CustomAdapter(rowsCalendar, monthsNameRu, homeViewModel)
+            recyclerView.adapter=customAdapter
+        })
 
-        val customAdapter=CustomAdapter(rowsCalendar, monthsNameRu, recyclerView.context)
+
 
 //        val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
 //        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
 //recyclerView.layoutManager =linearLayoutManager
 
-        recyclerView.adapter=customAdapter
+
         return root
     }
 
@@ -98,7 +112,10 @@ rightNow.set(2023,5,1)
         _binding = null
     }
 }
-class CustomAdapter(private val dataSet:ArrayList <ItemRowCalendar>,private val monthsNameRu:List<String> , private val context: Context ):
+class CustomAdapter(
+    private val dataSet:List <ItemRowCalendar>,
+    private val monthsNameRu:List<String> ,
+    private val homeViewModel: HomeViewModel ):
         RecyclerView.Adapter<CustomAdapter.ViewHolder >(){
 
     private val weekDays=  listOf<String>(
@@ -196,9 +213,27 @@ class CustomAdapter(private val dataSet:ArrayList <ItemRowCalendar>,private val 
                     }
                    // if (d==5 && !dataSet[position].days.last().isCurrentMonth) holder.daysView[d].text=""
                     holder.daysView[d].setOnClickListener(){
+
                         val date= Date(dataSet[position].days[d].date)
                         val formattedDateAsDigitMonth = SimpleDateFormat("dd/MM/yyyy")
-                        Log.v("a","homeFragm  days[position].date= ${formattedDateAsDigitMonth.format(date)}" )
+                        val calend = Calendar.getInstance()
+                        calend.setTimeInMillis(dataSet[position].days[d].date)
+                        val todos = listOf<Todo>(Todo(
+                            dateLong = 2222222,
+                            timeStart = 10,
+                            timeEnd = 20,
+                            describe = "todo describe example"
+                        ))
+
+                        CoroutineScope(Job()).launch{
+                            Log.v("a","homeFragm  days[position].date= ${formattedDateAsDigitMonth.format(date)}" )
+                            var day=dataSet[position].days[d]
+
+                           // homeViewModel.addDay(day)
+                        }
+
+
+
                     }
                 }
 
