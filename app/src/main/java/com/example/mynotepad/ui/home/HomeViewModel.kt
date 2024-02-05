@@ -11,10 +11,18 @@ import com.example.domain.usecase.AddDayUseCase
 import com.example.domain.usecase.GetDayUseCase
 import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 
 class HomeViewModel (
@@ -54,16 +62,19 @@ value = model
 
         println("coroutines ")
     }
+   // @OptIn(InternalCoroutinesApi::class)
     fun loadCalendars(startYear: Int, endYear: Int){
 
 
-        rowsCalendar.clear()
+       CoroutineScope(Job()).launch()  {
+
+            rowsCalendar.clear()
 
         val date = Calendar.getInstance()
         val dateS=date.timeInMillis/1000*1000 // обнуление миллисекунд
         date.timeInMillis=dateS
 
-        viewModelScope.launch {
+        //viewModelScope.launch {
 
             for (year in startYear..endYear) {
                 date.set(year, 0, 1, 0, 0, 0)
@@ -83,7 +94,7 @@ value = model
                         offsetDay--
                     } else offsetDay = 7
 
-                    Log.v("home view Model", "home view Model offsetDayNew=$offsetDay")
+                   // Log.v("home view Model", "home view Model offsetDayNew=$offsetDay")
                     //  var days : ArrayList<Day> = arrayListOf()
                     var days = arrayListOf<Day>()
                     var isDelLastColumn = true
@@ -113,21 +124,23 @@ value = model
 
                             if (col == 6 && isDelLastColumn) continue
 
-                            val dateMillis = date.timeInMillis
+                            val dateMillis = date.timeInMillis/1000*1000
 
                             //val id = dateMillis/10000
                             var isWeekend = false
                             if (str > 5) isWeekend = true
 
-                            val day :Day
+                            var day :Day
 
 
-                            val dayRoom = getDayUseCase.execute(dateMillis)
+                          //  val dayRoom = getDayUseCase.execute(dateMillis)
 
-                            if(dayRoom!=null){
-                                day= dayRoom
 
-                            } else {
+
+//                            if(day!=null){
+//                               // day= dayRoom
+//
+//                            } else {
 
                                 // Log.v("homeViewModel ", " dayRoom= ${dayRoom}")
 
@@ -142,16 +155,34 @@ value = model
                                     isCurrentMonth,
                                     1,
                                     "subscr",
-                                    listOf<Todo>(
-                                        Todo(
-                                            dateLong = 2222222,
-                                            timeStart = 10,
-                                            timeEnd = 20,
-                                            describe = "todo describe example"
-                                        )
+                                    arrayListOf<Todo>(
+//                                        Todo(
+//                                            dateLong = 2222222,
+//                                            timeStart = 10,
+//                                            timeEnd = 20,
+//                                            describe = "todo describe example"
+//                                        )
                                     )
                                 )
-                            }
+
+
+
+                                    val flow = getDayUseCase.execute(dateMillis)
+                                    flow.onEach { dayf ->
+                                        day = Day(
+                                            dayNum = dayNum,
+                                            date = dayf.date,
+                                            isWeekend = isWeekend,
+                                            isCurrentMonth = isCurrentMonth,
+                                            id = dayf.id,
+                                            describe = dayf.describe,
+                                            todos = dayf.todos
+                                        )
+                                        Log.v(
+                                            "homeViewModel", "dayf.id=${dayf.id}"
+                                        )
+                                    }.collect()
+
                             days.add(day)
 
                             daysRow.add(day)
@@ -173,6 +204,8 @@ value = model
             _rowsCalendarLiveData.postValue(rowsCalendar)
 
         }
+
+
        // Log.v("homeViewModel ", " years= ${years}")
     }
 

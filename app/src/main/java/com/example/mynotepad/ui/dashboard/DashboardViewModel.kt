@@ -22,7 +22,9 @@ class DashboardViewModel(
 
     }
     var text: LiveData<String> = _text
-    val notes: LiveData<List<Note>> =getNotesUseCase.notesFlow .asLiveData()
+    //val notes: LiveData<List<Note>> =getNotesUseCase.notesFlow .asLiveData()
+    val notes: LiveData<List<Note>> =getNotesUseCase.execute() .asLiveData()
+
 //    val notesFlow: Flow<List<Note>> =getNotesUseCase.execute()
 
 

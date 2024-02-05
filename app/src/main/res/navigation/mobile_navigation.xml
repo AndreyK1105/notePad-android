@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_dashboard2"
             app:destination="@id/navigation_dashboard" />
+        <action
+            android:id="@+id/action_navigation_home_to_editDay2"
+            app:destination="@id/editDay" />
 
     </fragment>
 
@@ -45,4 +48,23 @@
         android:name="com.example.mynotepad.ui.notifications.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/editTodo"
+        android:name="com.example.mynotepad.ui.home.edit_todo.EditTodo"
+        android:label="fragment_edit_todo"
+        tools:layout="@layout/fragment_edit_todo" />
+    <fragment
+        android:id="@+id/editDay"
+        android:name="com.example.mynotepad.ui.home.editday.EditDay"
+        android:label="EditDay" >
+        <action
+            android:id="@+id/action_editDay_to_editTodo"
+            app:destination="@id/editTodo" />
+        <argument
+            android:name="idDay"
+            app:argType="long" />
+        <argument
+            android:name="describe"
+            app:argType="string" />
+    </fragment>
 </navigation>

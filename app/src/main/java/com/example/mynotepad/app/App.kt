@@ -5,6 +5,7 @@ import com.example.mynotepad.di.dashboardModule
 import com.example.mynotepad.di.dataBaseModule
 import com.example.mynotepad.di.dataModule
 import com.example.mynotepad.di.domainModule
+import com.example.mynotepad.di.editDayModule
 import com.example.mynotepad.di.editNoteModule
 import com.example.mynotepad.di.homeModule
 import org.koin.android.ext.koin.androidContext
@@ -25,7 +26,8 @@ modules(listOf(
     dataModule,
     domainModule,
     homeModule,
-    editNoteModule
+    editNoteModule,
+    editDayModule
 ))
         }
     }

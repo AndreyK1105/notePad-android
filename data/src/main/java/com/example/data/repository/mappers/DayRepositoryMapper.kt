@@ -4,17 +4,18 @@ import com.example.data.repository.models.DayRepositoryEntity
 import com.example.data.repository.models.TodoRepositoryEntity
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
-import com.example.domain.repositoriy.DayRepository
 
 class DayRepositoryMapper {
     fun toDay (dayRepositoryEntity: DayRepositoryEntity): Day {
-        val todos=dayRepositoryEntity.todos.map {
-            Todo(
+        val todos= arrayListOf<Todo>()
+            dayRepositoryEntity.todos.map {
+            todos.add( Todo(
                 dateLong = it.dateLong,
                 timeStart = it.timeStart,
                 timeEnd = it.timeEnd,
                 describe = it.describe
 
+            )
             )
                    }
         return Day(
@@ -23,7 +24,7 @@ class DayRepositoryMapper {
             isWeekend =dayRepositoryEntity.isWeekend,
             isCurrentMonth = dayRepositoryEntity.isCurrentMonth,
             id=dayRepositoryEntity.id,
-            subscribe = dayRepositoryEntity.subscribe,
+            describe = dayRepositoryEntity.subscribe,
             todos = todos
         )
     }
@@ -44,7 +45,7 @@ class DayRepositoryMapper {
             isWeekend =day.isWeekend,
             isCurrentMonth = day.isCurrentMonth,
             id=day.id,
-            subscribe = day.subscribe,
+            subscribe = day.describe,
             todos = todos
         )
 

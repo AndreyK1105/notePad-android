@@ -6,8 +6,8 @@ data class Day(
     val isWeekend: Boolean,
     val isCurrentMonth: Boolean,
     val id: Int,
-    val subscribe: String,
-    val todos : List<Todo>
+    val describe: String,
+    val todos : ArrayList<Todo>
 
 
 ){

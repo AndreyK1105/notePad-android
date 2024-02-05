@@ -30,12 +30,12 @@ private const val ARG_PARAM2 = "param2"
  */
 class EditNote : Fragment() {
     // TODO: Rename and change types of parameters
-    private var idNote: Int? = 0
+    //private var idNote: Int? = null
     private var param2: String? = null
 
     private  var _binding: FragmentMyBinding?=null
     private val navArgs : EditNoteArgs by navArgs()
-    var idNoteArg:Int =0
+    var idNote:Int =0
     var editTextNote = ""
 
     private val binding get() = _binding!!
@@ -49,12 +49,12 @@ class EditNote : Fragment() {
         super.onCreate(savedInstanceState)
 
 
-        arguments?.let {
-            idNote = it.getInt(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+//        arguments?.let {
+//            idNote = it.getInt(ARG_PARAM1)
+//            param2 = it.getString(ARG_PARAM2)
+//        }
 
-        idNoteArg=navArgs.idNote
+        idNote=navArgs.idNote
 
 
 val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
@@ -98,7 +98,7 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
 
 
                      //   Log.v("a", "click listener action save current millisec/1000.toInt= $currentDataInt")
-                        viewModel.saveNote(Note(idNoteArg, editTextNote, currentData.toLong() ))
+                        viewModel.saveNote(Note(idNote, editTextNote, currentData.toLong() ))
                     }
                     true
                 }
@@ -109,7 +109,7 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
                 R.id.action_delete ->{
                     Log.v("a", "click listener action user ")
                     lifecycleScope.launch{
-                        viewModel.delNote(idNoteArg)
+                        viewModel.delNote(idNote)
                     }
                     findNavController().popBackStack()
                     true
@@ -121,11 +121,11 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
 
 
         //Log.v("a", "EditNote editTextNote=$editTextNote ")
-        if (idNoteArg!=-1){
+        if (idNote!=-1){
             if (editTextNote.isEmpty()){
 
                 lifecycleScope.launch{
-                     viewModel.getNoteFromId(idNoteArg)
+                     viewModel.getNoteFromId(idNote)
 
                     editTextNote=viewModel.saveText
                     Log.v("a", "EditNote editTextNote 2 =$editTextNote ")
@@ -134,7 +134,7 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
 
             }
 
-        }else idNoteArg=0
+        }else idNote=0
 
 
 
@@ -178,23 +178,23 @@ viewModel.saveText(  editTextNote)
         Log.v("a", "My fragment onDestroyView  ")
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: Int, param2: String) =
-            EditNote().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+//    companion object {
+//        /**
+//         * Use this factory method to create a new instance of
+//         * this fragment using the provided parameters.
+//         *
+//         * @param param1 Parameter 1.
+//         * @param param2 Parameter 2.
+//         * @return A new instance of fragment MyFragment.
+//         */
+//        // TODO: Rename and change types and number of parameters
+//        @JvmStatic
+//        fun newInstance(param1: Int, param2: String) =
+//            EditNote().apply {
+//                arguments = Bundle().apply {
+//                    putInt(ARG_PARAM1, param1)
+//                    putString(ARG_PARAM2, param2)
+//                }
+//            }
+//    }
 }

@@ -13,7 +13,8 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
@@ -30,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), CustomAdapter.RecyclerItemListener {
 
 
     private var _binding: FragmentHomeBinding? = null
@@ -54,7 +55,9 @@ private val homeViewModel by viewModel<HomeViewModel>()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        homeViewModel.loadCalendars(2023, 2024)
+        //CoroutineScope(Job()).launch {
+            homeViewModel.loadCalendars(2023, 2024)
+        //}
         year= homeViewModel.years
 
 
@@ -92,7 +95,7 @@ rightNow.set(2023,5,1)
         val monthsNameRu = listOf("Январь", "Февраль", "Март", "Апрель", "Май" ,"Июнь", "Июль", "Август", "Сентябрь","Октябрь","Ноябрь", "Декабрь" )
 
         homeViewModel.rowsCalendarLiveData.observe(viewLifecycleOwner, Observer<List<ItemRowCalendar>> {rowsCalendar=it
-            val customAdapter=CustomAdapter(rowsCalendar, monthsNameRu, homeViewModel)
+            val customAdapter=CustomAdapter(rowsCalendar, monthsNameRu, homeViewModel, this)
             recyclerView.adapter=customAdapter
         })
 
@@ -111,12 +114,23 @@ rightNow.set(2023,5,1)
         //Log.v("HomFr", "onDestroyView")
         _binding = null
     }
+
+    override fun onItemClick(idDay: Long, describe: String ) {
+        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToEditDay2(idDay, describe =describe ))
+    }
 }
 class CustomAdapter(
     private val dataSet:List <ItemRowCalendar>,
     private val monthsNameRu:List<String> ,
-    private val homeViewModel: HomeViewModel ):
+    private val homeViewModel: HomeViewModel,
+    private val listener: RecyclerItemListener
+
+    ):
         RecyclerView.Adapter<CustomAdapter.ViewHolder >(){
+
+    interface RecyclerItemListener{
+        fun onItemClick(idDay: Long, describe:String  )
+    }
 
     private val weekDays=  listOf<String>(
         "пн","вт","ср","чт","пт","сб","вс"
@@ -129,39 +143,63 @@ class CustomAdapter(
 //        context.getString(R.string.saturdayShort),
 //        context.getString(R.string.sundayShort),
     )
-            class ViewHolder(view:View):RecyclerView.ViewHolder(view){
-               // val recyclerView: RecyclerView
-                val textViewMonth: TextView
-                val textViewYear: TextView
-                val textViewWeek: TextView
-                val days: TableRow
-                val cardViewDay6: CardView
-                val tableLayout: TableLayout
-                val daysView: ArrayList<TextView>
+         inner   class ViewHolder(view:View):RecyclerView.ViewHolder(view), View.OnClickListener {
+             // val recyclerView: RecyclerView
+             val textViewMonth: TextView
+             val textViewYear: TextView
+             val textViewWeek: TextView
+             val days: TableRow
+             val cardViewDay6: CardView
+             val tableLayout: TableLayout
+             val daysView: List<TextView>
+             val describesDayView: List<TextView>
+             val cardViewDays: List<CardView>
 
 
+             init {
 
-                init {
+                 textViewMonth = view.findViewById(R.id.month)
+                 textViewYear = view.findViewById(R.id.eyar)
+                 textViewWeek = view.findViewById(R.id.weekDay)
+                 days = view.findViewById(R.id.days)
+                 daysView = listOf<TextView>(
+                     view.findViewById(R.id.dayItemRow1),
+                     view.findViewById(R.id.dayItemRow2),
+                     view.findViewById(R.id.dayItemRow3),
+                     view.findViewById(R.id.dayItemRow4),
+                     view.findViewById(R.id.dayItemRow5),
+                     view.findViewById(R.id.dayItemRow6)
+                 )
+                 cardViewDay6 = view.findViewById(R.id.cardViewDay6)
+                 tableLayout = view.findViewById(R.id.tableLayout)
+                 describesDayView = listOf(
+                     view.findViewById(R.id.describeDay1),
+                     view.findViewById(R.id.describeDay2),
+                     view.findViewById(R.id.describeDay3),
+                     view.findViewById(R.id.describeDay4),
+                     view.findViewById(R.id.describeDay5),
+                     view.findViewById(R.id.describeDay6),
+                 )
+                 cardViewDays = listOf(
+                     view.findViewById(R.id.cardViewDay1),
+                     view.findViewById(R.id.cardViewDay2),
+                     view.findViewById(R.id.cardViewDay3),
+                     view.findViewById(R.id.cardViewDay4),
+                     view.findViewById(R.id.cardViewDay5),
+                     view.findViewById(R.id.cardViewDay6),
+                 )
 
-                    textViewMonth=view.findViewById(R.id.month)
-                    textViewYear=view.findViewById(R.id.eyar)
-                    textViewWeek=view.findViewById(R.id.weekDay)
-                    days= view.findViewById(R.id.days)
-                    daysView=arrayListOf<TextView>()
-                    daysView.add(view.findViewById(R.id.dayItemRow1))
-                    daysView.add(view.findViewById(R.id.dayItemRow2))
-                    daysView.add(view.findViewById(R.id.dayItemRow3))
-                    daysView.add(view.findViewById(R.id.dayItemRow4))
-                    daysView.add(view.findViewById(R.id.dayItemRow5))
-                    daysView.add(view.findViewById(R.id.dayItemRow6))
-                    cardViewDay6=view.findViewById(R.id.cardViewDay6)
-                    tableLayout=view.findViewById(R.id.tableLayout)
 
+             }
 
+             override fun onClick(p0: View?) {
 
-
-                }
-            }
+//                 val position = adapterPosition
+//                 if (position != RecyclerView.NO_POSITION) {
+//                     listener.onItemClick(position)
+//                 }
+             }
+         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
        val view=LayoutInflater.from(parent.context).inflate(R.layout.item_calend_row, parent, false)
@@ -173,7 +211,7 @@ class CustomAdapter(
 
 
 
-        return ViewHolder(view)
+        return ViewHolder(view )
     }
 
     override fun getItemCount(): Int =(dataSet.size)
@@ -205,14 +243,17 @@ class CustomAdapter(
 
                 for (d in 0..dataSet[position].days.size-1){
                     holder.daysView[5].text=""
+                    holder.describesDayView[5].text=""
                     holder.daysView[d].text=dataSet[position].days[d].dayNum.toString()
                    when(dataSet[position].days[d].isWeekend) {
                        true ->holder.daysView[d].setTextColor(Color.RED)
                        false->holder.daysView[d].setTextColor(Color.WHITE)
 
                     }
+                    if (!dataSet[position].days[d].todos.isEmpty()){
+                    holder.describesDayView[d].text=dataSet[position].days[d].todos.first().describe}
                    // if (d==5 && !dataSet[position].days.last().isCurrentMonth) holder.daysView[d].text=""
-                    holder.daysView[d].setOnClickListener(){
+                    holder.cardViewDays[d].setOnClickListener(){
 
                         val date= Date(dataSet[position].days[d].date)
                         val formattedDateAsDigitMonth = SimpleDateFormat("dd/MM/yyyy")
@@ -224,15 +265,13 @@ class CustomAdapter(
                             timeEnd = 20,
                             describe = "todo describe example"
                         ))
-
+                        var day=dataSet[position].days[d]
                         CoroutineScope(Job()).launch{
                             Log.v("a","homeFragm  days[position].date= ${formattedDateAsDigitMonth.format(date)}" )
-                            var day=dataSet[position].days[d]
 
-                           // homeViewModel.addDay(day)
+
                         }
-
-
+                        listener.onItemClick(dataSet[position].days[d].date, describe =dataSet[position].days[d].describe )
 
                     }
                 }
@@ -305,7 +344,8 @@ class CustomAdapter(
 
 class DaysRowAdapter  (
     private val days: ArrayList<Day>,
-    private val context: Context
+    private val context: Context,
+    private val navController: NavController
 ):RecyclerView.Adapter <DaysRowAdapter.ViewHolderDays >(){
     class ViewHolderDays (view: View):RecyclerView.ViewHolder(view){
        val textViewDay: TextView
@@ -328,6 +368,7 @@ class DaysRowAdapter  (
         holder.textViewDay.setOnClickListener(){
             val date= Date(days[position].date)
             val formattedDateAsDigitMonth = SimpleDateFormat("dd/MM/yyyy")
+
 
 
             Log.v("a","homeFragm  days[position].date= ${formattedDateAsDigitMonth.format(date)}" )

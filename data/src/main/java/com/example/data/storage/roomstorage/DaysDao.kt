@@ -19,6 +19,10 @@ interface DaysDao {
     @Query("SELECT*FROM days_table ")
     fun getAllDays(): Flow<List<DayRoomEntity>>
 
+//    @Query("SELECT*FROM days_table WHERE id=:idDay")
+//
+//    suspend fun getDay(idDay:Int):Flow<DayRoomEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createDay(dayRoomEntity: DayRoomEntity)
 

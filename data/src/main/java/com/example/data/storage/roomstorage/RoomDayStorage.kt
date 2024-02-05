@@ -1,5 +1,6 @@
 package com.example.data.storage.roomstorage
 
+import android.util.Log
 import com.example.data.repository.models.DayRepositoryEntity
 import com.example.data.repository.models.TodoRepositoryEntity
 import com.example.data.storage.DayStorage
@@ -33,25 +34,29 @@ class RoomDayStorage (
             }
             emit(days)
         } }
-    override suspend fun getDay(date: Long): DayRepositoryEntity? {
+    override suspend fun getDay(date: Long): Flow<DayRepositoryEntity> {
+       // Log.v("roomDayStorage", "getDay date=$date")
         val dayRoomEntity= daysDao.getByDate(date)
 
-        if(dayRoomEntity!=null) {
+        return if(dayRoomEntity!=null) {
             val todosRoom = todosDao.getTodosForOwner(dayRoomEntity.id)
-            val todos : List<TodoRepositoryEntity> = if(todosRoom!=null) {
-                todosRoom.map { todoRoomMapper.roomToTodoRepositoryEntity(it) }
-            } else {
-                listOf<TodoRepositoryEntity>()
-            }
-            return dayRoomMapper.roomToDayRepositoryEntity(dayRoomEntity, todos)
-        } else return null
+            val todos : List<TodoRepositoryEntity> = todosRoom.map { todoRoomMapper.roomToTodoRepositoryEntity(it) }
+            Log.v("roomDayStorage", " dayRoomEntity= $dayRoomEntity")
+            flow {
+
+                val dayRepositoryEntity=dayRoomMapper.roomToDayRepositoryEntity(dayRoomEntity, todos)
+                Log.v("roomDayStorage", "get Flow dayRepositoryEntity= $dayRepositoryEntity")
+                emit( dayRepositoryEntity)}
+
+        } else flow {  }
 
     }
 
     override suspend fun addDay(day: DayRepositoryEntity): Boolean {
          daysDao.createDay(dayRoomMapper.toDayRoomEntity(day))
+        Log.v("roomDayStorage","create day")
         for (todo in day.todos){
-            todosDao.createTodo(todoRoomMapper.toTodoRoomEntity(todo, day.id))
+            todosDao.createTodo(todoRoomMapper.toTodoRoomEntity(todo, 18))
         }
 
         return true

@@ -37,6 +37,7 @@ view.setOnClickListener(this)
         }
 
         override fun onClick(p0: View?) {
+
             val position= adapterPosition
             if (position!=RecyclerView.NO_POSITION){
                 listener.onItemClick(position)
@@ -52,11 +53,11 @@ view.setOnClickListener(this)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-       // Log.v("a","adapter bnind ${ notes[0].textNote}" )
+       // Log.v("a","adapter bind ${ notes[0].textNote}" )
         val item=notes[position]
-       holder.textNote.text="${item.textNote.trimEnd() }"
+       holder.textNote.text= item.textNote.trimEnd()
         holder.textDate.text=SimpleDateFormat("dd-MM-yy").format(item.dateLong*1000) //  Date(item.dateLong).toDate
-        holder.textDateLong.text="id:${item.id.toString()}"
+        holder.textDateLong.text="id:"+item.id.toString()
 
 //        holder.itemView.setOnClickListener{
 //           if (onClickListener!=null){

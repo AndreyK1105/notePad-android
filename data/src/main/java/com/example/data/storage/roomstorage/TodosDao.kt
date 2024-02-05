@@ -10,14 +10,14 @@ import com.example.data.storage.roomstorage.notes.entities.TodoRoomEntity
 @Dao
 interface TodosDao {
     @Query("SELECT * FROM todos_table WHERE owner_id IS :ownerId")
-   fun   getTodosForOwner(ownerId: Int) : List<TodoRoomEntity>
+  suspend fun   getTodosForOwner(ownerId: Int) : List<TodoRoomEntity>
 
     @Query("SELECT * FROM todos_table WHERE id=:id ")
-    fun   getTodo(id: Int) : TodoRoomEntity
+   suspend fun   getTodo(id: Int) : TodoRoomEntity
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-     fun createTodo(todoRoomEntity: TodoRoomEntity)
+     suspend fun createTodo(todoRoomEntity: TodoRoomEntity)
 
     @Delete(entity= TodoRoomEntity::class )
-     fun delTodo(entity: TodoRoomEntity)
+     suspend fun delTodo(entity: TodoRoomEntity)
 }
 

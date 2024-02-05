@@ -51,6 +51,7 @@
             android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewDay1"
                 android:layout_width="@dimen/widthDay"
                 android:layout_height="@dimen/highDay">
 
@@ -67,10 +68,9 @@
                         tools:text="1" />
 
                     <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/describeDay1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Text"
                         android:textSize="10sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/dayItemRow1" />
@@ -79,47 +79,112 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewDay2"
                 android:layout_width="@dimen/widthDay"
                 android:layout_height="@dimen/highDay">
 
-                <TextView
-                    android:id="@+id/dayItemRow2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/dayItemRow2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/describeDay2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dayItemRow2" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewDay3"
                 android:layout_width="@dimen/widthDay"
                 android:layout_height="@dimen/highDay">
 
-                <TextView
-                    android:id="@+id/dayItemRow3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/dayItemRow3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/describeDay3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        app:layout_constraintTop_toBottomOf="@+id/dayItemRow3" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewDay4"
                 android:layout_width="@dimen/widthDay"
                 android:layout_height="@dimen/highDay">
 
-                <TextView
-                    android:id="@+id/dayItemRow4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="4" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/dayItemRow4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/describeDay4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        app:layout_constraintTop_toBottomOf="@+id/dayItemRow4" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewDay5"
                 android:layout_width="@dimen/widthDay"
                 android:layout_height="@dimen/highDay">
 
-                <TextView
-                    android:id="@+id/dayItemRow5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="5" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/dayItemRow5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/describeDay5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        app:layout_constraintTop_toBottomOf="@+id/dayItemRow5" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -127,10 +192,26 @@
                 android:layout_width="@dimen/widthDay"
                 android:layout_height="@dimen/highDay">
 
-                <TextView
-                    android:id="@+id/dayItemRow6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/dayItemRow6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/describeDay6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.cardview.widget.CardView>
 
         </TableRow>
