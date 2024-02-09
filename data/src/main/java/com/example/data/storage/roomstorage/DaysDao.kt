@@ -24,7 +24,7 @@ interface DaysDao {
 //    suspend fun getDay(idDay:Int):Flow<DayRoomEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun createDay(dayRoomEntity: DayRoomEntity)
+    suspend fun createDay(dayRoomEntity: DayRoomEntity):Long
 
 
 

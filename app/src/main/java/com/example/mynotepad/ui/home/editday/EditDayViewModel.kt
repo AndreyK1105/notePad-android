@@ -1,5 +1,7 @@
 package com.example.mynotepad.ui.home.editday
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.models.Day
@@ -20,19 +22,27 @@ class EditDayViewModel(
    // private var todos: List<Todo> = listOf()
     private  var dateDay:String=""
     private  var day: Day= Day(dayNum = 0, date = 0,isWeekend = false, isCurrentMonth = true, id = 0, describe = "", todos= arrayListOf() )
-     var todos: ArrayList<Todo> = arrayListOf()
+
+     var todos: MutableLiveData <ArrayList<Todo>> = MutableLiveData <ArrayList<Todo>>(arrayListOf())
     lateinit var textDate:String
 
  @OptIn(InternalCoroutinesApi::class)
  suspend fun getDay(date:Long) {
 
      day=Day(dayNum = 0, date = date,isWeekend = false, isCurrentMonth = true, id = 0, describe = "", todos= arrayListOf() )
-     viewModelScope.launch { getDayUseCase.execute(date).map { dayF ->
-         day=dayF
-         todos=dayF.todos
-         textDate=dayF.date.toString()
+     viewModelScope.launch {
+         val dayRepos =getDayUseCase.execute(date)
+         if (dayRepos!=null){
 
-    }}
+             day=dayRepos
+             todos.postValue(day.todos)
+             //todos=day.todos
+             textDate=day.date.toString()
+             Log.v("editDayVM", "todos.size=${todos}")
+                      }
+
+
+    }
  // return   getDayUseCase.execute(date)
     }
 

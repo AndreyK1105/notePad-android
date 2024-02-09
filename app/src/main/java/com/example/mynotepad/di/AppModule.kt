@@ -4,6 +4,7 @@ import com.example.domain.usecase.AddDayUseCase
 import com.example.mynotepad.ui.dashboard.DashboardViewModel
 import com.example.mynotepad.ui.editnote.EditNoteViewModel
 import com.example.mynotepad.ui.home.HomeViewModel
+import com.example.mynotepad.ui.home.edit_todo.EditTodoViewModel
 import com.example.mynotepad.ui.home.editday.EditDayViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -16,7 +17,7 @@ val dashboardModule= module {
 
 val homeModule= module {
     viewModel<HomeViewModel >{
-        HomeViewModel(addDayUseCase = get(), getDayUseCase = get() )    }
+        HomeViewModel(addDayUseCase = get(), getDayUseCase = get(), getDaysUseCase = get() )    }
 }
 val editNoteModule= module {
     viewModel{EditNoteViewModel( addNoteUseCase = get(), getNoteUseCase = get(),delNoteUseCase=get() )}
@@ -24,4 +25,8 @@ val editNoteModule= module {
 
 val editDayModule= module {
     viewModel{EditDayViewModel( addDayUseCase =get(), getDayUseCase = get()  )}
+}
+
+val editTodoModule= module {
+    viewModel{ EditTodoViewModel(  getTodoUseCase = get()  ) }
 }

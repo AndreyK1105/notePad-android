@@ -7,9 +7,10 @@ import com.example.domain.models.Todo
 
 class DayRepositoryMapper {
     fun toDay (dayRepositoryEntity: DayRepositoryEntity): Day {
-        val todos= arrayListOf<Todo>()
+        val todos = arrayListOf<Todo>()
             dayRepositoryEntity.todos.map {
             todos.add( Todo(
+                id = it.id,
                 dateLong = it.dateLong,
                 timeStart = it.timeStart,
                 timeEnd = it.timeEnd,
@@ -32,6 +33,7 @@ class DayRepositoryMapper {
     fun toDayRepositoryEntity( day: Day): DayRepositoryEntity{
         val todos=day.todos.map {
             TodoRepositoryEntity(
+                id = it.id,
                 dateLong = it.dateLong,
                 timeStart = it.timeStart,
                 timeEnd = it.timeEnd,

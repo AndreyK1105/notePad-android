@@ -1,12 +1,16 @@
 package com.example.mynotepad.ui.home.editday
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.Todo
@@ -28,6 +32,7 @@ class EditDay: Fragment() {
     private val navArgs: EditDayArgs by navArgs()
     private val viewModel by viewModel<EditDayViewModel>()
     //private lateinit var day: Day
+   // private val todos=viewModel.todos.observe(viewLifecycleOwner,)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +43,10 @@ class EditDay: Fragment() {
 //        }
         idDay=navArgs.idDay
         describe=navArgs.describe
-        lifecycleScope.launch {viewModel.getDay(idDay)  }
+        lifecycleScope.launch {
+            viewModel.getDay(idDay)
+
+        }
     }
 
 
@@ -56,16 +64,14 @@ class EditDay: Fragment() {
         //val recyclerView= binding.todoList
         val floatingAddTodo = binding.floatingAddTodo
         val dateEditDay:TextView=binding.dateEditDay
-        val buttonAddDay=binding.buttonAddDay
-        buttonAddDay.setOnClickListener(){
-           // viewModel.
-        }
 
-        floatingAddTodo.setOnClickListener(){
-            val todo=Todo(dateLong =idDay, timeStart = 0, timeEnd = 1, describe = "example todo" )
-           lifecycleScope.launch {viewModel.addTodo(todo, describe)  }
+//        val buttonAddDay=binding.buttonAddDay
+//        buttonAddDay.setOnClickListener(){
+//           // viewModel.
+//        }
 
-        }
+
+
 //        if ( savedInstanceState!=null) {
 //            val idDay=savedInstanceState.getInt("idDay")
 //        }else val idDay= 0
@@ -73,9 +79,27 @@ class EditDay: Fragment() {
 
        // viewLifecycleOwner.lifecycleScope.launch { viewModel.getDay(idDay.toLong()).collect{dayFlow-> day =dayFlow } }
         val recyclerViewTodos=binding.todoList
-        recyclerViewTodos.adapter=AdapterDays(viewModel.todos)
+        val todosListener: LiveData<ArrayList<Todo>> = viewModel.todos
+        todosListener.observe(viewLifecycleOwner, Observer {todos->
+            val nav=findNavController()
+            recyclerViewTodos.adapter=AdapterDays(todos, nav)
+        })
+        //recyclerViewTodos.adapter=AdapterDays(viewModel.todos)
         //viewModel.day
+        lifecycleScope.launch {
+            viewModel.getDay(idDay)
 
+
+           // recyclerViewTodos.adapter=AdapterDays(viewModel.todos)
+//Log.v("editDay", "getDay todos.size=${viewModel.todos.size}" +
+  //      "idDay=$idDay")
+        }
+        floatingAddTodo.setOnClickListener(){
+     //       recyclerViewTodos.adapter=AdapterDays(viewModel.todos)
+//            val todo=Todo(id = 0, dateLong =idDay, timeStart = 0, timeEnd = 1, describe = idDay.toString() )
+//           lifecycleScope.launch {viewModel.addTodo(todo, describe)  }
+
+        }
         return binding.root
 
 
@@ -83,10 +107,13 @@ class EditDay: Fragment() {
     }
 
 
+
+
 }
 
 class AdapterDays(
-    private val todos:List<Todo>
+    private val todos:List<Todo>,
+    private val  nav:NavController
 ) : RecyclerView.Adapter<AdapterDays.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -109,6 +136,9 @@ class AdapterDays(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
        val item=todos[position]
         holder.textTodo.text=item.describe
+        holder.textTodo.setOnClickListener(){
+            nav.navigate(EditDayDirections.actionEditDayToEditTodo(item.id))
+        }
     }
 
 }

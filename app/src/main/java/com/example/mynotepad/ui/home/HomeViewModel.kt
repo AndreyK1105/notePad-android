@@ -9,6 +9,7 @@ import com.example.domain.models.Day
 import com.example.domain.models.Todo
 import com.example.domain.usecase.AddDayUseCase
 import com.example.domain.usecase.GetDayUseCase
+import com.example.domain.usecase.GetDaysUseCase
 import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -22,12 +23,14 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 
 
 class HomeViewModel (
     private val addDayUseCase: AddDayUseCase,
-    private val getDayUseCase: GetDayUseCase
+    private val getDayUseCase: GetDayUseCase,
+    private val getDaysUseCase: GetDaysUseCase
 ): ViewModel() {
     private var model = MyModel(wname = "sss", age = 222222)
     private val _rowsCalendarLiveData=MutableLiveData<List<ItemRowCalendar>>()
@@ -43,7 +46,7 @@ value = model
 
 
     val rowsCalendar: ArrayList<ItemRowCalendar> = arrayListOf()
-    val years= arrayListOf<ArrayList<ArrayList<Day>>>()
+    //val years= arrayListOf<ArrayList<ArrayList<Day>>>()
 
     val myModel: LiveData<MyModel> = _text
     fun setModel(model: MyModel){
@@ -66,7 +69,7 @@ value = model
     fun loadCalendars(startYear: Int, endYear: Int){
 
 
-       CoroutineScope(Job()).launch()  {
+
 
             rowsCalendar.clear()
 
@@ -81,7 +84,7 @@ value = model
 
                 rowsCalendar.add(ItemRowCalendar(arrayListOf(), 3, 0, 0, year))
 
-                var months = arrayListOf<ArrayList<Day>>()
+               // var months = arrayListOf<ArrayList<Day>>()
                 for (month in 1..12) {
                     rowsCalendar.add(ItemRowCalendar(arrayListOf(), 2, 0, month, year))
 
@@ -96,7 +99,7 @@ value = model
 
                    // Log.v("home view Model", "home view Model offsetDayNew=$offsetDay")
                     //  var days : ArrayList<Day> = arrayListOf()
-                    var days = arrayListOf<Day>()
+                   // var days = arrayListOf<Day>()
                     var isDelLastColumn = true
                     for (str in 1..7) {
                         // var isNewStr=true
@@ -167,23 +170,8 @@ value = model
 
 
 
-                                    val flow = getDayUseCase.execute(dateMillis)
-                                    flow.onEach { dayf ->
-                                        day = Day(
-                                            dayNum = dayNum,
-                                            date = dayf.date,
-                                            isWeekend = isWeekend,
-                                            isCurrentMonth = isCurrentMonth,
-                                            id = dayf.id,
-                                            describe = dayf.describe,
-                                            todos = dayf.todos
-                                        )
-                                        Log.v(
-                                            "homeViewModel", "dayf.id=${dayf.id}"
-                                        )
-                                    }.collect()
 
-                            days.add(day)
+                           // days.add(day)
 
                             daysRow.add(day)
                             //date.roll(Calendar.DATE,true)
@@ -193,17 +181,39 @@ value = model
 
                     }
 
-                    months.add(days)
+                  //  months.add(days)
 
 
                 }
 
-                years.add(months)
+                //years.add(months)
                 // Log.v("homeViewModel ", " years= ${years}")
             }
-            _rowsCalendarLiveData.postValue(rowsCalendar)
+       CoroutineScope(Job()).launch() {
+           val flow = getDaysUseCase.execute()
+           flow.map {days->
 
-        }
+               for (rowCalend in rowsCalendar){
+                   for(day in rowCalend.days){
+                       for (dayFlow in days){
+                           if (day.date== dayFlow.date){
+                               day.describe=dayFlow.describe
+                               day.todos=dayFlow.todos
+                               Log.v("homeViewModel ", " dayFlow.date=${dayFlow.date}")
+                               Log.v("homeViewModel ", " dayFlow.todos.size=${dayFlow.todos.size}")
+                           }
+                       }
+                   }
+               }
+
+           }.collect(){
+
+               _rowsCalendarLiveData.postValue(rowsCalendar)}
+       }
+
+           _rowsCalendarLiveData.postValue(rowsCalendar)
+
+
 
 
        // Log.v("homeViewModel ", " years= ${years}")
@@ -225,3 +235,4 @@ init {
     _age=age
 }
 }
+

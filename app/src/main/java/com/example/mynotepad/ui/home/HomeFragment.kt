@@ -39,11 +39,14 @@ private val homeViewModel by viewModel<HomeViewModel>()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    var year= arrayListOf<ArrayList<ArrayList<Day>>>()
+    //var year= arrayListOf<ArrayList<ArrayList<Day>>>()
     var rowsCalendar =listOf<ItemRowCalendar>()
 
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        homeViewModel.loadCalendars(2024, 2024)
+    }
     override  fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,9 +59,9 @@ private val homeViewModel by viewModel<HomeViewModel>()
         val root: View = binding.root
 
         //CoroutineScope(Job()).launch {
-            homeViewModel.loadCalendars(2023, 2024)
+
         //}
-        year= homeViewModel.years
+        //year= homeViewModel.years
 
 
 
@@ -251,7 +254,9 @@ class CustomAdapter(
 
                     }
                     if (!dataSet[position].days[d].todos.isEmpty()){
-                    holder.describesDayView[d].text=dataSet[position].days[d].todos.first().describe}
+                    holder.describesDayView[d].text=dataSet[position].days[d].todos.first().describe}else {
+                        holder.describesDayView[d].text=""
+                    }
                    // if (d==5 && !dataSet[position].days.last().isCurrentMonth) holder.daysView[d].text=""
                     holder.cardViewDays[d].setOnClickListener(){
 
@@ -263,7 +268,8 @@ class CustomAdapter(
                             dateLong = 2222222,
                             timeStart = 10,
                             timeEnd = 20,
-                            describe = "todo describe example"
+                            describe = "todo describe example",
+                            id = 0
                         ))
                         var day=dataSet[position].days[d]
                         CoroutineScope(Job()).launch{

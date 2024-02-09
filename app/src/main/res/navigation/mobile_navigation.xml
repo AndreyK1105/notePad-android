@@ -52,7 +52,12 @@
         android:id="@+id/editTodo"
         android:name="com.example.mynotepad.ui.home.edit_todo.EditTodo"
         android:label="fragment_edit_todo"
-        tools:layout="@layout/fragment_edit_todo" />
+        tools:layout="@layout/fragment_edit_todo" >
+        <argument
+            android:name="idTodo"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
     <fragment
         android:id="@+id/editDay"
         android:name="com.example.mynotepad.ui.home.editday.EditDay"

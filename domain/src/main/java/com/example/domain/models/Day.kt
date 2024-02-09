@@ -6,10 +6,11 @@ data class Day(
     val isWeekend: Boolean,
     val isCurrentMonth: Boolean,
     val id: Int,
-    val describe: String,
-    val todos : ArrayList<Todo>
+    var describe: String,
+    var todos : ArrayList<Todo>
 
 
 ){
+
 
 }

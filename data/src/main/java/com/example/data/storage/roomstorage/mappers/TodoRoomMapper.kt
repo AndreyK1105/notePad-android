@@ -7,6 +7,7 @@ class TodoRoomMapper {
 
     fun roomToTodoRepositoryEntity(todoRoomEntity: TodoRoomEntity): TodoRepositoryEntity{
         return TodoRepositoryEntity(
+            id=todoRoomEntity.id,
             dateLong = todoRoomEntity.dateLong,
             timeStart = todoRoomEntity.timeStart,
             timeEnd = todoRoomEntity.timeEnd,
