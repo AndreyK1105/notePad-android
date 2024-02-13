@@ -148,14 +148,16 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
 //        }
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
+
                 editTextNote= p0.toString()
+              //  Log.v("a", "My fragment   afterTextChanged  $editTextNote")
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.v("a", "My fragment onTextChanged  ${p0}  p1=${p1}  p2=${p2} p3=${p3}  ")
+                //Log.v("a", "My fragment onTextChanged  ${p0}  p1=${p1}  p2=${p2} p3=${p3}  ")
             }
         })
 

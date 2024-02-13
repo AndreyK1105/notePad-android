@@ -7,6 +7,6 @@ interface TodoStorage {
     suspend fun  getTodos(ownerId: Int): List<TodoRepositoryEntity>
      suspend fun addTodo(note: TodoRepositoryEntity):Boolean
 
-     fun delTodo(id: Int):Boolean
+     suspend fun delTodo(id: Int):Boolean
 
 }

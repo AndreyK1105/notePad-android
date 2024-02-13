@@ -17,7 +17,7 @@ interface TodosDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
      suspend fun createTodo(todoRoomEntity: TodoRoomEntity)
 
-    @Delete(entity= TodoRoomEntity::class )
-     suspend fun delTodo(entity: TodoRoomEntity)
+    @Delete(entity= TodoRoomEntity::class ) //"DELETE FROM parsed_database WHERE id = :id"  entity= TodoRoomEntity::class
+     suspend fun delTodo(todoRoomEntity: TodoRoomEntity)
 }
 

@@ -57,6 +57,9 @@
             android:name="idTodo"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="date"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/editDay"

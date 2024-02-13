@@ -24,9 +24,9 @@ val editNoteModule= module {
 }
 
 val editDayModule= module {
-    viewModel{EditDayViewModel( addDayUseCase =get(), getDayUseCase = get()  )}
+    viewModel{EditDayViewModel( addDayUseCase =get(), getDayUseCase = get(), delTodoUseCase = get()  )}
 }
 
 val editTodoModule= module {
-    viewModel{ EditTodoViewModel(  getTodoUseCase = get()  ) }
+    viewModel{ EditTodoViewModel(  getTodoUseCase = get(), addTodoUseCase = get()  ) }
 }

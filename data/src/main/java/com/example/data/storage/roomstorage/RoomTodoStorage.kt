@@ -1,5 +1,6 @@
 package com.example.data.storage.roomstorage
 
+import android.util.Log
 import com.example.data.repository.models.TodoRepositoryEntity
 import com.example.data.storage.TodoStorage
 import com.example.data.storage.roomstorage.mappers.TodoRoomMapper
@@ -24,6 +25,8 @@ class RoomTodoStorage (
         var day =daysDao.getByDate(date)
         if (day!=null){
             val todoRoomEntity=todoRoomMapper.toTodoRoomEntity(todoRepositoryEntity, day.id)
+//            Log.v("RoomTodoStorage", "todoReposEnt=$todoRepositoryEntity")
+//            Log.v("RoomTodoStorage", "day.Id=${day.id}")
              todosDao.createTodo(todoRoomEntity)
        return true
         }else{
@@ -36,14 +39,16 @@ class RoomTodoStorage (
                 subscribe = ""
             )
             val id= daysDao.createDay(day)
-            val todoRoomEntity=todoRoomMapper.toTodoRoomEntity(todoRepositoryEntity, day.id)
+            val todoRoomEntity=todoRoomMapper.toTodoRoomEntity(todoRepositoryEntity, id.toInt())
             todosDao.createTodo(todoRoomEntity)
             return true
         }
 
     }
 
-    override fun delTodo(id: Int): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun delTodo(id: Int): Boolean {
+
+       todosDao.delTodo(todosDao.getTodo(id))
+        return true
     }
 }

@@ -4,6 +4,7 @@ import com.example.domain.usecase.AddDayUseCase
 import com.example.domain.usecase.AddNoteUseCase
 import com.example.domain.usecase.AddTodoUseCase
 import com.example.domain.usecase.DelNoteUseCase
+import com.example.domain.usecase.DelTodoUseCase
 import com.example.domain.usecase.GetDayUseCase
 import com.example.domain.usecase.GetDaysUseCase
 import com.example.domain.usecase.GetNoteUseCase
@@ -15,6 +16,7 @@ val domainModule=module {
     factory <AddNoteUseCase> { AddNoteUseCase(noteRepository = get())  }
     factory <GetNotesUseCase>{GetNotesUseCase( noteRepositoryLocal =  get ())  }
     factory <DelNoteUseCase> {DelNoteUseCase ( noteRepository= get())  }
+    factory <DelTodoUseCase> {DelTodoUseCase ( todoRepository = get())  }
     factory <GetNoteUseCase> {GetNoteUseCase ( noteRepository= get())  }
     factory <AddDayUseCase> {AddDayUseCase ( dayRepository = get())  }
     factory <GetDayUseCase> {GetDayUseCase ( dayRepository = get())  }

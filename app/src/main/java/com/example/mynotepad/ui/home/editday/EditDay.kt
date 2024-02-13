@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -21,14 +22,19 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.navArgs
 import com.example.domain.models.Day
 import com.example.mynotepad.R
+import com.example.mynotepad.ui.dashboard.AdapterNotes
 import kotlinx.coroutines.launch
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 //private const val ARG_ID_DAY="idDay"
-class EditDay: Fragment() {
+class EditDay: Fragment(),AdapterDays.RecyclerItemListener {
     private  var _binding: FragmentEditDayBinding?=null
     private val binding get() = _binding!!
     private var idDay:Long =0
     private var describe:String=""
+    private var dateText:String=""
     private val navArgs: EditDayArgs by navArgs()
     private val viewModel by viewModel<EditDayViewModel>()
     //private lateinit var day: Day
@@ -43,6 +49,11 @@ class EditDay: Fragment() {
 //        }
         idDay=navArgs.idDay
         describe=navArgs.describe
+
+        val simpleDateFormat=SimpleDateFormat("dd-MM-yyyy")
+
+       // dateText= DateFormat.getDateInstance().format(calendar)
+        dateText= simpleDateFormat.format(idDay)
         lifecycleScope.launch {
             viewModel.getDay(idDay)
 
@@ -75,14 +86,15 @@ class EditDay: Fragment() {
 //        if ( savedInstanceState!=null) {
 //            val idDay=savedInstanceState.getInt("idDay")
 //        }else val idDay= 0
-        dateEditDay.text=idDay.toString()
+
+        dateEditDay.text=dateText
 
        // viewLifecycleOwner.lifecycleScope.launch { viewModel.getDay(idDay.toLong()).collect{dayFlow-> day =dayFlow } }
         val recyclerViewTodos=binding.todoList
         val todosListener: LiveData<ArrayList<Todo>> = viewModel.todos
         todosListener.observe(viewLifecycleOwner, Observer {todos->
             val nav=findNavController()
-            recyclerViewTodos.adapter=AdapterDays(todos, nav)
+            recyclerViewTodos.adapter=AdapterDays(todos, nav, this)
         })
         //recyclerViewTodos.adapter=AdapterDays(viewModel.todos)
         //viewModel.day
@@ -98,6 +110,7 @@ class EditDay: Fragment() {
      //       recyclerViewTodos.adapter=AdapterDays(viewModel.todos)
 //            val todo=Todo(id = 0, dateLong =idDay, timeStart = 0, timeEnd = 1, describe = idDay.toString() )
 //           lifecycleScope.launch {viewModel.addTodo(todo, describe)  }
+            findNavController().navigate(EditDayDirections.actionEditDayToEditTodo(date=idDay, idTodo = 0))
 
         }
         return binding.root
@@ -107,19 +120,31 @@ class EditDay: Fragment() {
     }
 
 
+    override  fun onClick(idTodo: Int) {
+        lifecycleScope.launch { viewModel.delTodo(idTodo) }
+    }
 
 
 }
 
 class AdapterDays(
     private val todos:List<Todo>,
-    private val  nav:NavController
+    private val  nav:NavController,
+    private val listener:RecyclerItemListener
 ) : RecyclerView.Adapter<AdapterDays.ViewHolder>() {
+
+    interface RecyclerItemListener{
+        fun onClick(idTodo:Int)
+
+    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val textTodo:TextView
+        val buttonDelTodo: Button
         init {
             textTodo=view.findViewById(R.id.itemTodoText)
+            buttonDelTodo=view.findViewById(R.id.buttoneDelTodo)
+
         }
 
     }
@@ -134,10 +159,16 @@ class AdapterDays(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-       val item=todos[position]
+
+        val item=todos[position]
         holder.textTodo.text=item.describe
         holder.textTodo.setOnClickListener(){
-            nav.navigate(EditDayDirections.actionEditDayToEditTodo(item.id))
+            nav.navigate(EditDayDirections.actionEditDayToEditTodo( idTodo= item.id, date= item.dateLong))
+                    }
+        holder.buttonDelTodo.setOnClickListener(){
+
+            listener.onClick(item.id)
+
         }
     }
 

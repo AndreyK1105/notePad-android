@@ -14,4 +14,8 @@ class TodoRepositoryImpl(private val todoStorage:TodoStorage, private val todoRe
     override suspend fun getTodo(id: Int): Todo {
        return todoRepositoryMapper.toTodo(todoStorage.getTodo(id))
     }
+
+    override suspend fun delTodo(id: Int): Boolean {
+       return todoStorage.delTodo(id)
+    }
 }

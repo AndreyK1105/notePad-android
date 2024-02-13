@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 
 
@@ -191,7 +193,7 @@ value = model
             }
        CoroutineScope(Job()).launch() {
            val flow = getDaysUseCase.execute()
-           flow.map {days->
+           flow.onEach  {days->
 
                for (rowCalend in rowsCalendar){
                    for(day in rowCalend.days){
@@ -206,9 +208,17 @@ value = model
                    }
                }
 
-           }.collect(){
 
-               _rowsCalendarLiveData.postValue(rowsCalendar)}
+
+
+             //  flowOf(rowsCalendar)
+
+
+              // _rowsCalendarLiveData=flowOf(rowsCalendar).asLiveData()
+               _rowsCalendarLiveData.postValue(rowsCalendar)
+
+           }.collect(){  }
+
        }
 
            _rowsCalendarLiveData.postValue(rowsCalendar)

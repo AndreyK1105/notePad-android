@@ -58,6 +58,7 @@ private val homeViewModel by viewModel<HomeViewModel>()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        //homeViewModel.loadCalendars(2024, 2024)
         //CoroutineScope(Job()).launch {
 
         //}

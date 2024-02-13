@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
 import com.example.domain.usecase.AddDayUseCase
+import com.example.domain.usecase.DelTodoUseCase
 import com.example.domain.usecase.GetDayUseCase
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.map
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 class EditDayViewModel(
     private val addDayUseCase: AddDayUseCase,
     private val getDayUseCase: GetDayUseCase,
+    private val delTodoUseCase: DelTodoUseCase
 
 
 ): ViewModel() {
@@ -53,6 +55,10 @@ class EditDayViewModel(
             dayNum = 0,
             date = todo.dateLong,isWeekend = false, isCurrentMonth = true, id = 0, describe = describe, todos= day.todos )
          addDayUseCase.execute(dayTodo)
+    }
+
+    suspend fun delTodo(id:Int){
+        delTodoUseCase.execute(id)
     }
 
 init {

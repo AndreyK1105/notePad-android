@@ -7,11 +7,17 @@
     tools:context=".ui.home.edit_todo.EditTodo">
 
 
-    <TextView
-        android:id="@+id/textTodo"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editTodoText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Name"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

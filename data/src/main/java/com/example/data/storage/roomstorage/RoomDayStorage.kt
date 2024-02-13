@@ -9,6 +9,7 @@ import com.example.data.storage.roomstorage.mappers.TodoRoomMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 
 class RoomDayStorage (
     private val daysDao : DaysDao,
@@ -52,7 +53,12 @@ class RoomDayStorage (
     }
 
     override suspend fun getDays(): Flow<ArrayList<DayRepositoryEntity>> {
+
+//        daysDao.getAllDays().onEach {Log.v("roomDayStorage", "get AllDays1")  }.collect(){
+//
+//        }
         return daysDao.getAllDays().flatMapLatest { value ->
+            Log.v("roomDayStorage", "get AllDays2")
             flow {
                 val days= arrayListOf<DayRepositoryEntity>()
                 for (day in value){
@@ -67,6 +73,7 @@ class RoomDayStorage (
                 }
                 emit(days)
             } }
+
     }
 
     override suspend fun addDay(day: DayRepositoryEntity): Boolean {
