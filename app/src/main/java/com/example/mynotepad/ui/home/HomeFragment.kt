@@ -2,15 +2,17 @@ package com.example.mynotepad.ui.home
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -24,12 +26,13 @@ import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
+
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+
 
 class HomeFragment : Fragment(), CustomAdapter.RecyclerItemListener {
 
@@ -45,13 +48,30 @@ private val homeViewModel by viewModel<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeViewModel.loadCalendars(2024, 2024)
+        homeViewModel.loadCalendars(2024, 2025)
     }
     override  fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+
+        val displayMetrics= context?.resources?.displayMetrics
+        val size=Point()
+       val widthBox=size.x/7
+        var heightBox:Int?
+        if (displayMetrics!=null){
+         heightBox= displayMetrics.heightPixels/8}else{
+             heightBox=null
+        }
+        val colorRed=resources.getColor(R.color.red,  null) ///////////////////////////////
+        val color=Color.RED
+
+
+//        Log.v("homeFragm", "colorRed=$colorRed")
+//        Log.v("homeFragm", "color=$color")
+        Log.v("homeFragm", "heightBox=$heightBox")
 //        val homeViewModel =
 //            ViewModelProvider(this).get(HomeViewModel::class.java)
 
@@ -99,7 +119,12 @@ rightNow.set(2023,5,1)
         val monthsNameRu = listOf("Январь", "Февраль", "Март", "Апрель", "Май" ,"Июнь", "Июль", "Август", "Сентябрь","Октябрь","Ноябрь", "Декабрь" )
 
         homeViewModel.rowsCalendarLiveData.observe(viewLifecycleOwner, Observer<List<ItemRowCalendar>> {rowsCalendar=it
-            val customAdapter=CustomAdapter(rowsCalendar, monthsNameRu, homeViewModel, this)
+
+            val customAdapter= context?.let { it1 ->
+                CustomAdapter(rowsCalendar, monthsNameRu, homeViewModel, this, heightBox,
+                    it1
+                )
+            }
             recyclerView.adapter=customAdapter
         })
 
@@ -125,12 +150,36 @@ rightNow.set(2023,5,1)
 }
 class CustomAdapter(
     private val dataSet:List <ItemRowCalendar>,
-    private val monthsNameRu:List<String> ,
+    private val monthsNameRu:List<String>,
     private val homeViewModel: HomeViewModel,
-    private val listener: RecyclerItemListener
+    private val listener: RecyclerItemListener,
+    private val heightBox:Int?,
+    private val context: Context,
+
+
 
     ):
         RecyclerView.Adapter<CustomAdapter.ViewHolder >(){
+    private  val colorBackgr:Int
+    private  val colorBackgrWeekend:Int
+    private  val colorBackgrWeekendIsNotCurrent:Int
+    private  val colorBackgrIsNotCurrent:Int
+    private  val colorTextWeekendIsNotCurent:Int
+    private  val colorTextWeekend:Int
+    private  val colorTextIsCurrent:Int
+    private  val colorTextIsNotCurrent:Int
+            init {
+                colorBackgr=ContextCompat.getColor(context, R.color.gray )
+                colorBackgrIsNotCurrent=ContextCompat.getColor(context, R.color.black50 )
+                colorBackgrWeekend=ContextCompat.getColor(context, R.color.red)
+               // colorBackgrWeekend=ContextCompat.getColor(context, R.color.red)
+                colorBackgrWeekendIsNotCurrent=ContextCompat.getColor(context, R.color.black50 )
+                colorTextWeekendIsNotCurent=ContextCompat.getColor(context, R.color.red )
+                colorTextWeekend=ContextCompat.getColor(context, R.color.red )
+                colorTextIsCurrent=ContextCompat.getColor(context, R.color.white )
+                colorTextIsNotCurrent=ContextCompat.getColor(context, R.color.black )
+
+            }
 
     interface RecyclerItemListener{
         fun onItemClick(idDay: Long, describe:String  )
@@ -152,20 +201,23 @@ class CustomAdapter(
              val textViewMonth: TextView
              val textViewYear: TextView
              val textViewWeek: TextView
-             val days: TableRow
-             val cardViewDay6: CardView
-             val tableLayout: TableLayout
+             //val days: TableRow
+            // val cardViewDay6: CardView
+             val rowDays: ConstraintLayout
              val daysView: List<TextView>
              val describesDayView: List<TextView>
              val cardViewDays: List<CardView>
+             //val widthBox:Int
 
 
              init {
+//                 widthBox=view.width/7
+//                 Log.v("homeFragm", "widthBox=$widthBox")
 
                  textViewMonth = view.findViewById(R.id.month)
                  textViewYear = view.findViewById(R.id.eyar)
                  textViewWeek = view.findViewById(R.id.weekDay)
-                 days = view.findViewById(R.id.days)
+                 //days = view.findViewById(R.id.days)
                  daysView = listOf<TextView>(
                      view.findViewById(R.id.dayItemRow1),
                      view.findViewById(R.id.dayItemRow2),
@@ -174,8 +226,9 @@ class CustomAdapter(
                      view.findViewById(R.id.dayItemRow5),
                      view.findViewById(R.id.dayItemRow6)
                  )
-                 cardViewDay6 = view.findViewById(R.id.cardViewDay6)
-                 tableLayout = view.findViewById(R.id.tableLayout)
+//                 cardViewDay6 = view.findViewById(R.id.cardViewDay6)
+//                 cardViewDay6.layoutParams.width =widthBox
+                 rowDays = view.findViewById(R.id.rowDays)////////////////////
                  describesDayView = listOf(
                      view.findViewById(R.id.describeDay1),
                      view.findViewById(R.id.describeDay2),
@@ -233,7 +286,7 @@ class CustomAdapter(
 
         when (dataSet[position].varTitle) {
             1 -> {
-                holder.tableLayout.visibility=View.VISIBLE
+                holder.rowDays.visibility=View.VISIBLE
 
                 holder.textViewWeek.text=weekDays[dataSet[position].dayOfWeek-1]
                 holder.textViewYear.text=""
@@ -244,20 +297,47 @@ class CustomAdapter(
 //                holder. dayItemRow4.text=dataSet[position].days[3].dayNum.toString()
 //                holder. dayItemRow5.text=dataSet[position].days[4].dayNum.toString()
 //                holder. dayItemRow6.text=dataSet[position].days[5].dayNum.toString()
+                if (dataSet[position].days.size<6){
+                    holder.cardViewDays[5].visibility=View.GONE
+                }else{
+                    holder.cardViewDays[5].visibility=View.VISIBLE
+                }
+               // val heightBox= (holder.cardViewDays.first().width*1.3).roundToInt()
 
                 for (d in 0..dataSet[position].days.size-1){
                     holder.daysView[5].text=""
                     holder.describesDayView[5].text=""
                     holder.daysView[d].text=dataSet[position].days[d].dayNum.toString()
+                    if (heightBox!=null){
+                    holder.cardViewDays[d].layoutParams.height =heightBox}
                    when(dataSet[position].days[d].isWeekend) {
-                       true ->holder.daysView[d].setTextColor(Color.RED)
-                       false->holder.daysView[d].setTextColor(Color.WHITE)
+                       true -> {
+                           when (dataSet[position].days[d].isCurrentMonth) {
+                               true -> holder.cardViewDays[d].setCardBackgroundColor( colorBackgrWeekend    )
 
-                    }
+                               false -> holder.cardViewDays[d].setCardBackgroundColor( colorBackgrWeekendIsNotCurrent)
+                           }
+
+
+                       }
+                       false -> {
+                           when (dataSet[position].days[d].isCurrentMonth) {
+                               true -> {
+                                   holder.daysView[d].setTextColor(colorTextIsCurrent)
+                                   holder.cardViewDays[d].setCardBackgroundColor( colorBackgr)
+                               }
+                               false -> {
+                                   holder.daysView[d].setTextColor(colorTextIsNotCurrent)
+                                   holder.cardViewDays[d].setCardBackgroundColor( colorBackgrIsNotCurrent)
+                               }
+                           }
+                       }
+                   }
                     if (!dataSet[position].days[d].todos.isEmpty()){
                     holder.describesDayView[d].text=dataSet[position].days[d].todos.first().describe}else {
                         holder.describesDayView[d].text=""
                     }
+
                    // if (d==5 && !dataSet[position].days.last().isCurrentMonth) holder.daysView[d].text=""
                     holder.cardViewDays[d].setOnClickListener(){
 
@@ -296,7 +376,7 @@ class CustomAdapter(
                // textViewMonth.setText("dd")
 
             2 -> {
-                holder.tableLayout.visibility=View.GONE
+                holder.rowDays.visibility=View.GONE
 
                 holder.textViewMonth.text = monthsNameRu[dataSet[position].monthOfYear-1]
                 holder.textViewYear.text=""
@@ -314,7 +394,7 @@ class CustomAdapter(
 //                text.text="dynamic"
             }
             3 -> {
-                holder.tableLayout.visibility=View.GONE
+                holder.rowDays.visibility=View.GONE
                 holder.textViewYear.text = dataSet[position].year.toString()
                 holder.textViewMonth.text=""
                 holder.textViewWeek.text=""
