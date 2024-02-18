@@ -34,39 +34,39 @@ class HomeViewModel (
     private val getDayUseCase: GetDayUseCase,
     private val getDaysUseCase: GetDaysUseCase
 ): ViewModel() {
-    private var model = MyModel(wname = "sss", age = 222222)
+//    private var model = MyModel(wname = "sss", age = 222222)
     private val _rowsCalendarLiveData=MutableLiveData<List<ItemRowCalendar>>()
     val rowsCalendarLiveData: LiveData<List<ItemRowCalendar>>
         get() = _rowsCalendarLiveData
 
-    private val _text = MutableLiveData<MyModel>().apply {
-
-        //value = "This is home Fragment"
-
-value = model
-    }
+//    private val _text = MutableLiveData<MyModel>().apply {
+//
+//        //value = "This is home Fragment"
+//
+//value = model
+//    }
 
 
     val rowsCalendar: ArrayList<ItemRowCalendar> = arrayListOf()
     //val years= arrayListOf<ArrayList<ArrayList<Day>>>()
 
-    val myModel: LiveData<MyModel> = _text
-    fun setModel(model: MyModel){
-        _text.postValue(model)
-       // var message:String = _text.value?.name
-//        Log.v("_text", _text.value!!.name)
-//        Log.v("myModel", myModel.value!!.name)
-    }
+//    val myModel: LiveData<MyModel> = _text
+//    fun setModel(model: MyModel){
+//        _text.postValue(model)
+//       // var message:String = _text.value?.name
+////        Log.v("_text", _text.value!!.name)
+////        Log.v("myModel", myModel.value!!.name)
+//    }
 
-     fun suspFun() = viewModelScope.launch {
-        for(i in 0..5){
-            delay(400L)
-            println(i)
-
-    }
-
-        println("coroutines ")
-    }
+//     fun suspFun() = viewModelScope.launch {
+//        for(i in 0..5){
+//            delay(400L)
+//            println(i)
+//
+//    }
+//
+//        println("coroutines ")
+//    }
    // @OptIn(InternalCoroutinesApi::class)
     fun loadCalendars(startYear: Int, endYear: Int){
 

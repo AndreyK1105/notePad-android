@@ -9,6 +9,7 @@ import com.example.data.storage.roomstorage.mappers.TodoRoomMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 class RoomDayStorage (
@@ -53,7 +54,7 @@ class RoomDayStorage (
     }
 
     override suspend fun getDays(): Flow<ArrayList<DayRepositoryEntity>> {
-
+      //  Log.v("roomDayStorage", "get AllDays1")
 //        daysDao.getAllDays().onEach {Log.v("roomDayStorage", "get AllDays1")  }.collect(){
 //
 //        }
@@ -64,8 +65,20 @@ class RoomDayStorage (
                 for (day in value){
                     val ownerId = day.id
 
+//                  todosDao.getTodosForOwnerFlow(ownerId)
+//                       .flatMapLatest {
+//                               listTodo->
+//                           val todos= arrayListOf<TodoRepositoryEntity>()
+//                           for (todo in listTodo){
+//                               todos.add(todoRoomMapper.roomToTodoRepositoryEntity(todo))
+//                           }
+//                           days.add(dayRoomMapper.roomToDayRepositoryEntity(day,todos))
+//                           flow {
+//                               emit(todos)
+//                           }
+//                       }
                     // need checking for null list respond if todos is empty
-                    val todos = todosDao.getTodosForOwner(ownerId).map { todoRoomMapper.roomToTodoRepositoryEntity(it) }
+                   val todos = todosDao.getTodosForOwner(ownerId).map { todoRoomMapper.roomToTodoRepositoryEntity(it) }
                     days.add(
                         dayRoomMapper.roomToDayRepositoryEntity(day,todos)
                     )

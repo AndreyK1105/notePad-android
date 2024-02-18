@@ -313,9 +313,15 @@ class CustomAdapter(
                    when(dataSet[position].days[d].isWeekend) {
                        true -> {
                            when (dataSet[position].days[d].isCurrentMonth) {
-                               true -> holder.cardViewDays[d].setCardBackgroundColor( colorBackgrWeekend    )
+                               true -> {
+                                   holder.cardViewDays[d].setCardBackgroundColor(colorBackgrWeekend)
+                                   holder.daysView[d].setTextColor(colorTextIsCurrent)
+                               }
 
-                               false -> holder.cardViewDays[d].setCardBackgroundColor( colorBackgrWeekendIsNotCurrent)
+                               false -> {
+                                   holder.cardViewDays[d].setCardBackgroundColor(colorBackgrWeekendIsNotCurrent)
+                                   holder.daysView[d].setTextColor(colorTextIsNotCurrent)
+                               }
                            }
 
 

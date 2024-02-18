@@ -6,11 +6,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.data.storage.roomstorage.notes.entities.TodoRoomEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TodosDao {
     @Query("SELECT * FROM todos_table WHERE owner_id IS :ownerId")
-  suspend fun   getTodosForOwner(ownerId: Int) : List<TodoRoomEntity>
+   fun   getTodosForOwnerFlow(ownerId: Int) : Flow<List<TodoRoomEntity>>
+
+
+    @Query("SELECT * FROM todos_table WHERE owner_id IS :ownerId")
+    suspend fun   getTodosForOwner(ownerId: Int) :List<TodoRoomEntity>
 
     @Query("SELECT * FROM todos_table WHERE id=:id ")
    suspend fun   getTodo(id: Int) : TodoRoomEntity

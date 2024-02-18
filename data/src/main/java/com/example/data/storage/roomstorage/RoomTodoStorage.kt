@@ -27,7 +27,11 @@ class RoomTodoStorage (
             val todoRoomEntity=todoRoomMapper.toTodoRoomEntity(todoRepositoryEntity, day.id)
 //            Log.v("RoomTodoStorage", "todoReposEnt=$todoRepositoryEntity")
 //            Log.v("RoomTodoStorage", "day.Id=${day.id}")
-             todosDao.createTodo(todoRoomEntity)
+
+
+            todosDao.createTodo(todoRoomEntity)
+            daysDao.updateDay(day)
+            //
        return true
         }else{
             day= DayRoomEntity(
@@ -48,7 +52,13 @@ class RoomTodoStorage (
 
     override suspend fun delTodo(id: Int): Boolean {
 
-       todosDao.delTodo(todosDao.getTodo(id))
+       val todo=todosDao.getTodo(id)
+        val day=daysDao.getByDate(todo.dateLong)
+        todosDao.delTodo(todo)
+
+        if (day != null) {
+            daysDao.updateDay(day)
+        }
         return true
     }
 }
