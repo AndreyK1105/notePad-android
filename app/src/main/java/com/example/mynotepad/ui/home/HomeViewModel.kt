@@ -1,11 +1,17 @@
 package com.example.mynotepad.ui.home
 
+import android.app.Application
+import android.app.PendingIntent
+import android.content.Intent
 import android.util.Log
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.data.network.auth.AppAuth
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
 import com.example.domain.usecase.AddDayUseCase
@@ -15,6 +21,8 @@ import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -27,15 +35,21 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
+import net.openid.appauth.AuthorizationService
 
 
 class HomeViewModel (
+    application: Application,
     private val addDayUseCase: AddDayUseCase,
     private val getDayUseCase: GetDayUseCase,
-    private val getDaysUseCase: GetDaysUseCase
-): ViewModel() {
+    private val getDaysUseCase: GetDaysUseCase,
+
+): AndroidViewModel(application) {
 //    private var model = MyModel(wname = "sss", age = 222222)
     private val _rowsCalendarLiveData=MutableLiveData<List<ItemRowCalendar>>()
+     val authService: AuthorizationService = AuthorizationService(getApplication())
+     val openAuthPageEventChannel = Channel<Intent>(Channel.BUFFERED)
+
     val rowsCalendarLiveData: LiveData<List<ItemRowCalendar>>
         get() = _rowsCalendarLiveData
 
@@ -46,6 +60,27 @@ class HomeViewModel (
 //value = model
 //    }
 
+
+    fun getToken(){
+
+    }
+    fun openPageOauth(){
+        val customTabsIntent= CustomTabsIntent.Builder().build()
+        val authRequest= AppAuth.getAuthRequest()
+        Log.v ("Oauth", " 1. Generated verifier=${authRequest.codeVerifier},challenge=${authRequest.codeVerifierChallenge}")
+        val openAuthPageIntent = authService.getAuthorizationRequestIntent(
+            authRequest,
+            customTabsIntent
+        )
+        authService.performAuthorizationRequest(
+            authRequest,
+            PendingIntent.getActivity(getApplication(), 0, Intent( ), PendingIntent.FLAG_MUTABLE )
+        )
+
+//            openAuthPageEventChannel.trySendBlocking(openAuthPageIntent)
+//
+        Log.v ("Oauth", "  Open auth page: ${authRequest.toUri()}")
+    }
 
     val rowsCalendar: ArrayList<ItemRowCalendar> = arrayListOf()
     //val years= arrayListOf<ArrayList<ArrayList<Day>>>()
@@ -193,6 +228,7 @@ class HomeViewModel (
             }
        CoroutineScope(Job()).launch() {
            val flow = getDaysUseCase.execute()
+
            flow.onEach  {days->
 
                for (rowCalend in rowsCalendar){
@@ -201,8 +237,8 @@ class HomeViewModel (
                            if (day.date== dayFlow.date){
                                day.describe=dayFlow.describe
                                day.todos=dayFlow.todos
-                               Log.v("homeViewModel ", " dayFlow.date=${dayFlow.date}")
-                               Log.v("homeViewModel ", " dayFlow.todos.size=${dayFlow.todos.size}")
+//                               Log.v("homeViewModel ", " dayFlow.date=${dayFlow.date}")
+//                               Log.v("homeViewModel ", " dayFlow.todos.size=${dayFlow.todos.size}")
                            }
                        }
                    }

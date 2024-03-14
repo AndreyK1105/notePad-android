@@ -23,7 +23,7 @@ class DayRoomMapper {
 
     fun toDayRoomEntity (dayRepositoryEntity: DayRepositoryEntity): DayRoomEntity{
         return DayRoomEntity(
-            id=0,
+            id=dayRepositoryEntity.id,
             dayNum = dayRepositoryEntity.dayNum,
             date = dayRepositoryEntity.date,
             isWeekend = dayRepositoryEntity.isWeekend,

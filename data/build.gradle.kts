@@ -12,6 +12,10 @@ android {
     defaultConfig {
         minSdk = 26
 
+
+
+        manifestPlaceholders ["appAuthRedirectScheme"]= "com.example.mynotepad"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
@@ -23,6 +27,7 @@ android {
                 )
             }
         }
+
     }
 
     buildTypes {
@@ -70,6 +75,12 @@ dependencies {
     implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0")
     api ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines")
     api ("org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.3.0")
+    implementation("com.squareup.picasso:picasso:2.71828")
+
+    implementation("net.openid:appauth:0.11.1")
 
 }
 // optional - Paging 3 Integration

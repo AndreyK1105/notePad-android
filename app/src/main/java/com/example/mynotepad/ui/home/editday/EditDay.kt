@@ -121,7 +121,12 @@ class EditDay: Fragment(),AdapterDays.RecyclerItemListener {
 
 
     override  fun onClick(idTodo: Int) {
-        lifecycleScope.launch { viewModel.delTodo(idTodo) }
+        lifecycleScope.launch {
+            viewModel.delTodo(idTodo)
+           // findNavController().popBackStack()
+            viewModel.getDay(idDay)
+        }
+
     }
 
 

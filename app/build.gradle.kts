@@ -21,6 +21,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        manifestPlaceholders ["appAuthRedirectScheme"]= "com.example.mynotepad"
+
 
     }
 
@@ -64,6 +66,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.5.0")
     implementation(project(mapOf("path" to ":data")))
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.browser:browser:1.7.0")
     testImplementation("io.insert-koin:koin-test:3.5.0")
     implementation(project(mapOf("path" to ":domain")))
     testImplementation("junit:junit:4.13.2")
@@ -98,5 +101,8 @@ dependencies {
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("net.openid:appauth:0.11.1")
+
 }
 

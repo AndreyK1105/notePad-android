@@ -1,16 +1,28 @@
 package com.example.data.storage.roomstorage
 
 import android.util.Log
+import com.example.data.network.models.Resource
+import com.example.data.network.models.SingleUser
+import com.example.data.network.retrofit.interfaces.RetrofitService
 import com.example.data.repository.models.DayRepositoryEntity
 import com.example.data.repository.models.TodoRepositoryEntity
 import com.example.data.storage.DayStorage
 import com.example.data.storage.roomstorage.mappers.DayRoomMapper
 import com.example.data.storage.roomstorage.mappers.TodoRoomMapper
+import com.example.data.storage.roomstorage.notes.entities.DayRoomEntity
+import com.example.domain.models.Todo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Delay
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import retrofit2.Callback
+import retrofit2.Response
 
 class RoomDayStorage (
     private val daysDao : DaysDao,
@@ -58,6 +70,39 @@ class RoomDayStorage (
 //        daysDao.getAllDays().onEach {Log.v("roomDayStorage", "get AllDays1")  }.collect(){
 //
 //        }
+           // TODO:" get allDays  from net Storage and save in room"
+
+        val retrofitService= RetrofitService.create()
+        // .getCalendarList()
+
+
+        retrofitService
+            //.getCalendarList()
+            .getListResource()
+            .enqueue(object : Callback<Resource> {
+                override fun onResponse(
+                    call: retrofit2.Call<Resource>,
+                    response: Response<Resource>
+                ) {
+                    CoroutineScope(Job()).launch {
+
+                    delay(3000)
+                        val todos= listOf<TodoRepositoryEntity>(TodoRepositoryEntity(id=0, dateLong = 1704031200000, timeEnd = 1, timeStart = 1, describe = "roror"))
+                        val day=DayRepositoryEntity(dayNum = 1, date= 1704031200000L, isWeekend = false, isCurrentMonth = true, id =29  , subscribe = "new", todos=todos )
+                       addDay(day)
+                        //daysDao.updateDay(dayRoomMapper.toDayRoomEntity(day)  )
+                        Log.v("roomDayStorage","addDay(day)=${day}" )
+                    }
+
+                    Log.v("roomDayStorage","homefragment response.body()=${response.body()}" )
+                }
+
+                override fun onFailure(call: retrofit2.Call<Resource>, t: Throwable) {
+                    Log.v("roomDayStorage","homefragment onFailure t=${t}" )
+                }
+
+            })
+
         return daysDao.getAllDays().flatMapLatest { value ->
             Log.v("roomDayStorage", "get AllDays2")
             flow {

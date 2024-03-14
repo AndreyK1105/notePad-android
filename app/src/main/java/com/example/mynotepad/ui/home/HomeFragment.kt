@@ -1,15 +1,19 @@
 package com.example.mynotepad.ui.home
 
+import android.app.Application
+import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
+import android.telecom.Call
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -18,6 +22,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.data.network.auth.AppAuth
+import com.example.data.network.models.CalendarFull
+import com.example.data.network.models.SingleUser
+import com.example.data.network.models.UsersTest
+import com.example.data.network.retrofit.RetrofitClient
+import com.example.data.network.retrofit.interfaces.RetrofitService
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
 import com.example.mynotepad.R
@@ -26,12 +36,18 @@ import com.example.mynotepad.ui.dashboard.ItemRowCalendar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.trySendBlocking
 
 import kotlinx.coroutines.launch
+import net.openid.appauth.AppAuthConfiguration
+import net.openid.appauth.AuthorizationService
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+
 
 
 class HomeFragment : Fragment(), CustomAdapter.RecyclerItemListener {
@@ -102,16 +118,47 @@ private val homeViewModel by viewModel<HomeViewModel>()
 //        }
         val recyclerView:RecyclerView=binding.recyclerView
 
+
+
         val floatingButton: FloatingActionButton=binding.floatingActionButton
         floatingButton.setOnClickListener(){
-            val rightNow  = Calendar.getInstance()
-rightNow.set(2023,5,1)
-            val lenghtMont=rightNow.getActualMaximum(Calendar.DAY_OF_MONTH)
-            val dayOfWeek= rightNow.get(Calendar.DAY_OF_WEEK)
-            val month= rightNow.get(Calendar.YEAR)
-            Log.v("a","homefragment lenghtMont=${lenghtMont}" )
-            Log.v("a","homefragment dayOfWeek=${dayOfWeek}" )
-            Log.v("a","homefragment month=${month}" )
+
+            homeViewModel.openPageOauth()
+
+
+            val retrofitService=RetrofitService.create()
+               // .getCalendarList()
+
+
+          //  retrofitService
+            //    .getCalendarList()
+
+                //.getSingleUser()
+              //  .enqueue(object : Callback<CalendarFull> {
+//                override fun onResponse(
+//                    call: retrofit2.Call<CalendarFull>,
+//                    response: Response<CalendarFull>
+//                ) {
+//                    Log.v("homefragment","homefragment response.body()=${response.body()}" )
+//                }
+//
+//                override fun onFailure(call: retrofit2.Call<CalendarFull>, t: Throwable) {
+//                    Log.v("homefragment","homefragment onFailure t=${t}" )
+//                }
+
+            //})
+//            retrofitService.enqueue(object: Callback<List<UsersTest>> {
+//               override fun onResponse(call: Call<List<UsersTest>>?, response: Res)
+//            })
+
+//            val rightNow  = Calendar.getInstance()
+//rightNow.set(2023,5,1)
+//            val lenghtMont=rightNow.getActualMaximum(Calendar.DAY_OF_MONTH)
+//            val dayOfWeek= rightNow.get(Calendar.DAY_OF_WEEK)
+//            val month= rightNow.get(Calendar.YEAR)
+//            Log.v("a","homefragment lenghtMont=${lenghtMont}" )
+//            Log.v("a","homefragment dayOfWeek=${dayOfWeek}" )
+//            Log.v("a","homefragment month=${month}" )
         //    findNavController().navigate(R.id.action_navigation_home_to_myFragment ,null)
         }
 

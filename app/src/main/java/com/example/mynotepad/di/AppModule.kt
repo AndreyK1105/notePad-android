@@ -17,7 +17,7 @@ val dashboardModule= module {
 
 val homeModule= module {
     viewModel<HomeViewModel >{
-        HomeViewModel(addDayUseCase = get(), getDayUseCase = get(), getDaysUseCase = get() )    }
+        HomeViewModel( addDayUseCase = get(), getDayUseCase = get(), getDaysUseCase = get(), application = get() )    }
 }
 val editNoteModule= module {
     viewModel{EditNoteViewModel( addNoteUseCase = get(), getNoteUseCase = get(),delNoteUseCase=get() )}

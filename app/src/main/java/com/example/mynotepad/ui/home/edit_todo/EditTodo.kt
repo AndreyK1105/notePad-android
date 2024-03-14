@@ -66,6 +66,7 @@ class EditTodo : Fragment() {
                         Log.v("editTodo", " p2=$p2")
                         lifecycleScope.launch {
                             viewModel.addDescribeTodo( editTodoText.text.toString(), date)
+                            findNavController().popBackStack()
                         }
 
                     }
