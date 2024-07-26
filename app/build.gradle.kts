@@ -103,6 +103,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("net.openid:appauth:0.11.1")
+    implementation("net.objecthunter:exp4j:0.4.8")
 
 }
 

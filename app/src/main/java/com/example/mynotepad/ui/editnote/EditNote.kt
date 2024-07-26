@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.Note
 import com.example.mynotepad.R
@@ -20,6 +22,8 @@ import com.example.mynotepad.databinding.FragmentMyBinding
 import kotlinx.coroutines.launch
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+import net.objecthunter.exp4j.ExpressionBuilder
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -37,6 +41,8 @@ class EditNote : Fragment() {
     private val navArgs : EditNoteArgs by navArgs()
     var idNote:Int =0
     var editTextNote = ""
+    val tokens= arrayListOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+        '+', '-', '*', '/', '=', '÷',  ' ', '·', '×', ',', '.', '(', ')')
 
     private val binding get() = _binding!!
 
@@ -79,6 +85,10 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
         editText.setText(editTextNote)
 
         val toolbar=binding.toolbar
+//        val appBarConfiguration = AppBarConfiguration(findNavController().graph)
+//        toolbar.setupWithNavController(findNavController(), appBarConfiguration)
+
+
         toolbar.setTitle("my frag")
         toolbar.inflateMenu(R.menu.toolbar_menu)
         toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
@@ -146,19 +156,85 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
 //                value->editText.setText(value)
 //
 //        }
+//        editText.setOnClickListener(View.OnClickListener {
+//
+//            val selStart =   editText.selectionStart
+//            val selEnd =   editText.selectionEnd
+//            Log.v("a", "My fragment setOnClickListener  selStart=${selStart}  selEnd=${selEnd}  ")
+//
+//        })
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
 
                 editTextNote= p0.toString()
-              //  Log.v("a", "My fragment   afterTextChanged  $editTextNote")
+
+
+//                Log.v("a", "My fragment   afterTextChanged  $editTextNote")
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
+//                val selStart =   editText.selectionStart
+//                val selEnd =   editText.selectionEnd
+////
+//                if (p0 != null) {
+//                    val p0String = p0.toString()
+//                    val dropList= p0String.take(p1)// dropLast(p1)
+//                    val listStrings=  dropList.lines()
+//                    val lastLine=listStrings[listStrings.lastIndex]
+//                    Log.v("a", "My fragment onTextChanged  lastLine=$lastLine  ")
+//                }
+//                Log.v("a", "My fragment beforeTextChanged   ${p0}   p1=${p1}  p2=${p2} p3=${p3}   ")
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //Log.v("a", "My fragment onTextChanged  ${p0}  p1=${p1}  p2=${p2} p3=${p3}  ")
+               // val dropList
+                if(p2==0) {
+                    if (p0 != null) {
+                        val dropList = p0.toString().take(p1+1 )
+                        val listStrings = dropList.lines()
+                        val lastLine = listStrings[listStrings.lastIndex]
+                        Log.v("a", "My fragment onTextChanged  lastLine=$lastLine  ")
+
+                        if (lastLine.isNotEmpty() && lastLine.last() == '=') {
+                            var mathOper=" "
+                            var resultString = " "
+                            mathOper= lastLine.take(lastLine.length-1)
+                            for( i in lastLine.length downTo 1){
+                                if(lastLine[i-1] !in tokens){
+                                mathOper=lastLine.takeLast(lastLine.length-i)
+                                mathOper= mathOper.take(mathOper.length-1)
+
+                                    break
+                                }
+
+                            }
+                           mathOper= mathOper.replace('×', '*')
+                            mathOper=mathOper.replace('÷', '/')
+                            mathOper=mathOper.replace(',', '.')
+                            try{
+                                val ex=ExpressionBuilder(mathOper.toString()).build()
+                                 val result = ex.evaluate()
+                                val longRes = result.toLong()
+                                if(result==longRes.toDouble())
+                                    resultString=longRes.toString()
+                                else
+                                    resultString=  String.format("%.3f",result )
+                            } catch (e:Exception){
+                                Log.v("a", "My fragment onTextChanged error= ${e.message} ")
+                            }
+
+                            var newText = dropList + resultString  + p0.takeLast(p0.length - p1 - 1)
+                            if (newText.first() == '=') {
+                                newText = " " + newText
+                            }
+                            editText.setText(newText)
+                            editText.setSelection(p1+1+resultString.length)
+                        }
+                    }
+                }
+                Log.v("a", "My fragment onTextChanged  ${p0}   p1=${p1}  p2=${p2} p3=${p3}   ")
             }
+
+
         })
 
 

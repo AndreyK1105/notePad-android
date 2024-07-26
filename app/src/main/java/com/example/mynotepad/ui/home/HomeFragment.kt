@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.data.network.auth.AppAuth
 import com.example.data.network.models.CalendarFull
@@ -94,6 +96,13 @@ private val homeViewModel by viewModel<HomeViewModel>()
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+       // val toolbarCalendar=binding.toolbarCalendar
+
+//        val appBarConfiguration = AppBarConfiguration(findNavController().graph, drawerLayout = binding.drawerLayout)
+//
+//
+//        toolbarCalendar.setupWithNavController(findNavController(), appBarConfiguration)
+
         //homeViewModel.loadCalendars(2024, 2024)
         //CoroutineScope(Job()).launch {
 
@@ -119,7 +128,7 @@ private val homeViewModel by viewModel<HomeViewModel>()
         val recyclerView:RecyclerView=binding.recyclerView
 
 
-
+/*
         val floatingButton: FloatingActionButton=binding.floatingActionButton
         floatingButton.setOnClickListener(){
 
@@ -160,8 +169,8 @@ private val homeViewModel by viewModel<HomeViewModel>()
 //            Log.v("a","homefragment dayOfWeek=${dayOfWeek}" )
 //            Log.v("a","homefragment month=${month}" )
         //    findNavController().navigate(R.id.action_navigation_home_to_myFragment ,null)
-        }
-
+       }
+*/
         val monthsName = arrayOf("January", "February", "March", "May", "June" ,"Jule", "March", "February", "March", )
         val monthsNameRu = listOf("Январь", "Февраль", "Март", "Апрель", "Май" ,"Июнь", "Июль", "Август", "Сентябрь","Октябрь","Ноябрь", "Декабрь" )
 
