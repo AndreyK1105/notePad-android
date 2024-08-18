@@ -22,8 +22,8 @@ class MainActivity : AppCompatActivity()  {
    //  val  homeViewModel=
      //   ViewModelProvider(this).get(HomeViewModel::class.java)
     private lateinit var binding: ActivityMainBinding
-private val currFr: Fragment
-    get() = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)!!
+//private val currFr: Fragment
+//    get() = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)!!
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -18,16 +18,16 @@ import com.example.data.storage.roomstorage.notes.entities.TodoRoomEntity
 
 const val DATA_BASE="database"
 @Database(
-    version = 5,
+    version = 1,
     entities = [
 NoteRoomEntity::class,
     DayRoomEntity::class,
     TodoRoomEntity::class
     ],
     autoMigrations = [
-        AutoMigration(from = 2, to = 3),
-        AutoMigration(from = 3, to = 4),
-        AutoMigration(from = 4, to = 5)
+//        AutoMigration(from = 2, to = 3),
+//        AutoMigration(from = 3, to = 4),
+//        AutoMigration(from = 4, to = 5)
     ],
     exportSchema = true
 )

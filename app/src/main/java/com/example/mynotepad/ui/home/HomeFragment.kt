@@ -25,11 +25,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.data.network.auth.AppAuth
-import com.example.data.network.models.CalendarFull
-import com.example.data.network.models.SingleUser
-import com.example.data.network.models.UsersTest
-import com.example.data.network.retrofit.RetrofitClient
-import com.example.data.network.retrofit.interfaces.RetrofitService
+//import com.example.data.network.models.CalendarFull
+//import com.example.data.network.models.SingleUser
+//import com.example.data.network.models.UsersTest
+//import com.example.data.network.retrofit.RetrofitClient
+//import com.example.data.network.retrofit.interfaces.RetrofitService
 import com.example.domain.models.Day
 import com.example.domain.models.Todo
 import com.example.mynotepad.R

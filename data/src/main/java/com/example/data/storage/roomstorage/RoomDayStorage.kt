@@ -1,9 +1,9 @@
 package com.example.data.storage.roomstorage
 
 import android.util.Log
-import com.example.data.network.models.Resource
-import com.example.data.network.models.SingleUser
-import com.example.data.network.retrofit.interfaces.RetrofitService
+//import com.example.data.network.models.Resource
+//import com.example.data.network.models.SingleUser
+//import com.example.data.network.retrofit.interfaces.RetrofitService
 import com.example.data.repository.models.DayRepositoryEntity
 import com.example.data.repository.models.TodoRepositoryEntity
 import com.example.data.storage.DayStorage
@@ -71,7 +71,7 @@ class RoomDayStorage (
 //
 //        }
            // TODO:" get allDays  from net Storage and save in room"
-
+/*
         val retrofitService= RetrofitService.create()
         // .getCalendarList()
 
@@ -102,7 +102,7 @@ class RoomDayStorage (
                 }
 
             })
-
+*/
         return daysDao.getAllDays().flatMapLatest { value ->
             Log.v("roomDayStorage", "get AllDays2")
             flow {

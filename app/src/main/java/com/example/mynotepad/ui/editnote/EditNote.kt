@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.activity.addCallback
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -241,8 +242,9 @@ val callback= requireActivity().onBackPressedDispatcher.addCallback(this){
 
         //val view = binding.root
         // Inflate the layout for this fragment
-    return binding.root
-    //return inflater.inflate(R.layout.fragment_my, container, false)
+
+        return binding.root
+    //return ComposeView(requireContext()) // inflater.inflate(R.layout.fragment_my, container, false)
 
     }
 
